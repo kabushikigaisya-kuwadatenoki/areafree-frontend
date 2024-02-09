@@ -1,16 +1,19 @@
-import "@mantine/core/styles.css";
-import React from "react";
-import { MantineProvider, ColorSchemeScript } from "@mantine/core";
-import { theme } from "../theme";
+import { theme } from '@/theme'
+import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import '@mantine/core/styles.css'
+import React from 'react'
 
 export const metadata = {
-  title: "Mantine Next.js template",
-  description: "I am using Mantine with Next.js!",
-};
+  title: {
+    default: '案件名',
+    template: '%s | 案件名',
+  },
+  description: '案件紹介する文章を入れる',
+}
 
-export default function RootLayout({ children }: { children: any }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <head>
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
@@ -23,5 +26,5 @@ export default function RootLayout({ children }: { children: any }) {
         <MantineProvider theme={theme}>{children}</MantineProvider>
       </body>
     </html>
-  );
+  )
 }
