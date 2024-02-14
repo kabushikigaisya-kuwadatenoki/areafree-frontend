@@ -1,7 +1,7 @@
 'use client'
-import { Card, Progress, Text, Title } from '@mantine/core'
-import { Button, Menu, rem } from '@mantine/core'
-import { Rating, TextInput } from '@mantine/core'
+import { SearchBar } from '@/app/_components/ui/common/search-form'
+import { ExampleCard, HogeCard } from '@/app/example/_components'
+import { Button, Card, Menu, Progress, Rating, Text, TextInput, Title, rem } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import {
   IconCalendar,
@@ -10,8 +10,6 @@ import {
   IconSquareCheck,
   IconUsers,
 } from '@tabler/icons-react'
-
-import { ExampleCard, HogeCard } from '@/app/example/_components'
 
 export default function Page() {
   const form = useForm({
@@ -27,6 +25,7 @@ export default function Page() {
   })
   return (
     <>
+      <SearchBar />
       <p className="text-red">aaa</p>
       <ExampleCard title="テストです。" />
       <HogeCard title="テストです。" />
