@@ -1,4 +1,3 @@
-import { theme } from '@/theme'
 import { Button, Paper, Stack, Text } from '@mantine/core'
 import Link from 'next/link'
 
