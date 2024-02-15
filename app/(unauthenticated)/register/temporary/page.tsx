@@ -6,7 +6,7 @@ export default function Page() {
         <Text fw={700} size="lg">
           会員仮登録完了
         </Text>
-        <Text ta="center" size="sm" lh={2}>
+        <Text ta="center" size="xs" lh={2}>
           ご入力いただいたメールアドレスへ
           <br />
           登録確認メールをお送りしました。

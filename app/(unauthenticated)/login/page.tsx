@@ -1,5 +1,3 @@
-import { LoginForm } from '@/app/_components/ui/LoginForm'
-
 export default function Page() {
-  return <LoginForm />
+  return <p>this is login page</p>
 }
