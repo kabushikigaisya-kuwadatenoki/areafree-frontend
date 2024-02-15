@@ -1,4 +1,5 @@
 'use client'
+
 import { SearchBar } from '@/app/_components/ui/common/search-form'
 import { ExampleCard, HogeCard } from '@/app/example/_components'
 import { Button, Card, Menu, Progress, Rating, Text, TextInput, Title, rem } from '@mantine/core'
@@ -18,7 +19,6 @@ export default function Page() {
       termsOfService: false,
       stars: 0,
     },
-
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'メールアドレスを入力してください'),
     },
