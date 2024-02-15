@@ -89,11 +89,12 @@ export function LoginForm(props: LoginFormProps) {
               ? 'Already have an account? Login'
               : "Don't have an account? Register"}
           </Anchor>
-          <Button type="submit" radius="xl">
+          <Button type="submit" radius="xl" onClick={() => {}}>
             {upperFirst(type)}
           </Button>
         </Group>
       </form>
+      {JSON.stringify(form.values.email)}
     </Paper>
   )
 }
