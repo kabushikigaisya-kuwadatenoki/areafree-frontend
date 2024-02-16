@@ -1,3 +1,4 @@
+import { Demo } from "@/app/_components/ui/forms/guide-plan-form";
 export default function Page() {
-  return <p>this is guide register page</p>
+  return <Demo />;
 }

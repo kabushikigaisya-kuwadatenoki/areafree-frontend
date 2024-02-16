@@ -1,5 +1,5 @@
-import { UserRegister } from '@/app/_components/ui/forms/user-register-form'
+import { UserProfileForm } from '@/app/_components/ui/forms/user-profile-form'
 
 export default async function Page() {
-  return <UserRegister />
+  return <UserProfileForm />
 }
