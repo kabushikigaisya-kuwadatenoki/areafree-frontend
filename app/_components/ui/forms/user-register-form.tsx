@@ -64,7 +64,6 @@ export function UserRegister({ initialValues }: Props) {
 
   const form = useForm({
     initialValues: initialValues || defaultValues,
-
     validate: {
       lastName: (value = '') =>
         value.trim().length < 1 || value.trim().length > 50
