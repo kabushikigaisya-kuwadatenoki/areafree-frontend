@@ -89,7 +89,7 @@ export function UserProfileForm({ initialValues }: Props) {
       gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
       birthday: (value = '') =>
         !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
-      availableLanguages: (value: string[] = []) =>
+        availableLanguages: (value: string[] = []) =>
         value.some((lang) => lang === '未選択' || lang === '')
           ? '対応可能言語を選択してください'
           : null,
@@ -122,9 +122,14 @@ export function UserProfileForm({ initialValues }: Props) {
 
   // 言語選択の変更ハンドラ
   const handleLanguageChange = (id: number, value: string) => {
-    setLanguageInputs(
-      languageInputs.map((input) => (input.id === id ? { ...input, value: value } : input)),
+    const updatedLanguageInputs = languageInputs.map((input) =>
+      input.id === id ? { ...input, value: value } : input,
     )
+    setLanguageInputs(updatedLanguageInputs)
+
+    // languageInputsを更新した後で、フォームのavailableLanguagesフィールドを更新
+    const updatedAvailableLanguages = updatedLanguageInputs.map((input) => input.value)
+    form.setFieldValue('availableLanguages', updatedAvailableLanguages)
   }
 
   const handleScrollToTop = () => {
@@ -313,6 +318,11 @@ export function UserProfileForm({ initialValues }: Props) {
                   </Button>
                   <Button type="submit">登録</Button>
                 </>
+              )}
+              {pathname === '/profile' && (
+                <Button type="submit">
+                  保存
+                </Button>
               )}
             </Group>
           </form>

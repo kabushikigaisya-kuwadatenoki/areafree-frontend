@@ -237,7 +237,6 @@ export function UserRegister({ initialValues }: Props) {
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             {languageInputs.map((input, index) => (
-              <>
                 <NativeSelect
                   key={input.id}
                   label={`対応可能言語 ${index + 1}`}
@@ -249,7 +248,6 @@ export function UserRegister({ initialValues }: Props) {
                   withAsterisk
                   styles={{ input: { opacity: '1', color: '#555' } }}
                 />
-              </>
             ))}
             {registerStatus !== 'confirm' && (
               <>
