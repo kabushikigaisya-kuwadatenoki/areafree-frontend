@@ -31,10 +31,6 @@ type Props = {
     gender?: string
     birthday?: string
     availableLanguages?: string[]
-    postalCode?: string
-    province?: string
-    locality?: string
-    banchi?: string
     phoneNumber?: string
     email?: string
     password?: string
@@ -60,10 +56,6 @@ export function UserRegister({ initialValues }: Props) {
     gender: '',
     birthday: '',
     availableLanguages: [''],
-    postalCode: '',
-    province: '',
-    locality: '',
-    banchi: '',
     phoneNumber: '',
     email: '',
     password: '',
@@ -226,38 +218,6 @@ export function UserRegister({ initialValues }: Props) {
               </Text>
             )}
             {/* このテキストをクリックすると対応可能言語のNativeSelectが増える */}
-            <TextInput
-              label="郵便番号"
-              {...form.getInputProps('postalCode')}
-              mt="1rem"
-              placeholder="000-0000"
-              disabled={registerStatus === 'confirm'}
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
-            <TextInput
-              label="都道府県"
-              {...form.getInputProps('province')}
-              mt="1rem"
-              placeholder="都道府県"
-              disabled={registerStatus === 'confirm'}
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
-            <TextInput
-              label="市区町村"
-              {...form.getInputProps('locality')}
-              mt="1rem"
-              placeholder="市区町村"
-              disabled={registerStatus === 'confirm'}
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
-            <TextInput
-              label="番地以下"
-              {...form.getInputProps('banchi')}
-              mt="1rem"
-              placeholder="番地　建物名　建物番号"
-              disabled={registerStatus === 'confirm'}
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
             <TextInput
               label="電話番号"
               {...form.getInputProps('phoneNumber')}
