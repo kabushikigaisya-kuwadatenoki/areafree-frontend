@@ -66,16 +66,43 @@ export function UserProfileForm({ initialValues }: Props) {
     initialValues: initialValues || defaultValues,
 
     validate: {
-      email: (value = '') =>
-        /^\S+@\S+\.\S+$/.test(value) ? null : '有効なメールアドレスを入力してください',
-      password: (value = '') =>
-        value.length >= 8 ? null : 'パスワードは8文字以上で入力してください',
-      confirmPassword: (value, values) =>
-        value === values?.password ? null : 'パスワードが一致しません',
-      phoneNumber: (value = '') =>
-        /^\d{10,11}$/.test(value) ? null : '有効な電話番号を入力してください (10～11桁)',
+      lastName: (value = '') =>
+        value.trim().length < 1 || value.trim().length > 50
+          ? '姓を1〜50文字で入力してください'
+          : null,
+      lastNameKana: (value = '') =>
+        !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
+          ? '姓（カナ）は全角カナで1〜50文字で入力してください'
+          : null,
+      firstName: (value = '') =>
+        value.trim().length < 1 || value.trim().length > 50
+          ? '名を1〜50文字で入力してください'
+          : null,
+      firstNameKana: (value = '') =>
+        !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
+          ? '名（カナ）は全角カナで1〜50文字で入力してください'
+          : null,
+      nickname: (value = '') =>
+        value.trim().length < 1 || value.trim().length > 50
+          ? 'ニックネームを1〜50文字で入力してください'
+          : null,
+      gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
       birthday: (value = '') =>
-        /^\d{4}-\d{2}-\d{2}$/.test(value) ? null : '生年月日はYYYY-MM-DDの形式で入力してください',
+        !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
+      availableLanguages: (value: string[] = []) =>
+        value.some((lang) => lang === '未選択' || lang === '')
+          ? '対応可能言語を選択してください'
+          : null,
+      phoneNumber: (value = '') =>
+        !value.match(/^\d{10,11}$/) ? '電話番号を10〜11桁の数字で入力してください' : null,
+      email: (value = '') =>
+        !/^\S+@\S+\.\S+$/.test(value) ? '有効なメールアドレスを入力してください' : null,
+      password: (value = '') =>
+        value.length < 8 || !/\d/.test(value) || !/[a-zA-Z]/.test(value)
+          ? 'パスワードは8文字以上で、数字と英字を含む必要があります'
+          : null,
+      confirmPassword: (value, values) =>
+        value !== values.password ? 'パスワードと確認用パスワードが一致しません' : null,
     },
   })
 
@@ -158,6 +185,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="セイ"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
@@ -166,6 +194,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="名"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
@@ -174,6 +203,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="メイ"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
@@ -182,6 +212,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="ニックネーム"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <NativeSelect
@@ -189,6 +220,7 @@ export function UserProfileForm({ initialValues }: Props) {
               {...form.getInputProps('gender')}
               data={['未選択', '指定しない', '男性', '女性']}
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
               mt="1rem"
             />
@@ -201,21 +233,31 @@ export function UserProfileForm({ initialValues }: Props) {
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             {languageInputs.map((input, index) => (
-              <NativeSelect
-                key={input.id}
-                label={`対応可能言語 ${index + 1}`}
-                value={input.value}
-                onChange={(event) => handleLanguageChange(input.id, event.currentTarget.value)}
-                data={['未選択', 'Japanese', 'Korean', 'English', 'Chinese']}
-                mt="1rem"
-                disabled={registerStatus === 'confirm'}
-                styles={{ input: { opacity: '1', color: '#555' } }}
-              />
+              <>
+                <NativeSelect
+                  key={input.id}
+                  label={`対応可能言語 ${index + 1}`}
+                  value={input.value}
+                  onChange={(event) => handleLanguageChange(input.id, event.currentTarget.value)}
+                  data={['未選択', 'Japanese', 'Korean', 'English', 'Chinese']}
+                  mt="1rem"
+                  disabled={registerStatus === 'confirm'}
+                  withAsterisk
+                  styles={{ input: { opacity: '1', color: '#555' } }}
+                />
+              </>
             ))}
             {registerStatus !== 'confirm' && (
-              <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
-                ＋対応可能言語を追加
-              </Text>
+              <>
+                {form.errors.availableLanguages && (
+                  <Text c="red" size="xs" mt={5}>
+                    {form.errors.availableLanguages}
+                  </Text>
+                )}
+                <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
+                  ＋対応可能言語を追加
+                </Text>
+              </>
             )}
             {/* このテキストをクリックすると対応可能言語のNativeSelectが増える */}
             <TextInput
@@ -224,6 +266,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="1234567890"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
@@ -232,6 +275,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="example@example.com"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <PasswordInput
@@ -240,6 +284,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="xxxxxxxx"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <PasswordInput
@@ -248,6 +293,7 @@ export function UserProfileForm({ initialValues }: Props) {
               mt="1rem"
               placeholder="xxxxxxxx"
               disabled={registerStatus === 'confirm'}
+              withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <Group justify="center" mt="md">
