@@ -20,6 +20,7 @@ const pages = [
   { name: '利用規約', type: '一般', link: '/terms' },
   { name: '使用方法', type: '一般', link: '/how-to-use' },
   { name: 'プライバシーポリシー', type: '一般', link: '/privacy' },
+  { name: 'お問合せ', type: '一般', link: '/inquiry' },
 ]
 
 const frontendEndpoint = process.env.NEXT_PUBLIC_FRONTEND_ENDPOINT
