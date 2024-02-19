@@ -4,6 +4,15 @@ import { createTheme } from '@mantine/core'
 
 export const theme = createTheme({
   /* Put your mantine theme override here */
+  components: {
+    Accordion: {
+      styles: {
+        item: {
+          borderBottom: '1px solid #33947D',
+        },
+      },
+    },
+  },
   primaryColor: 'primary',
   colors: {
     primary: [
