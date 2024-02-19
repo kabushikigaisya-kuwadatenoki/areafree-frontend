@@ -1,18 +1,18 @@
-"use client";
-import { Table, TableData, Text, Radio, Paper } from "@mantine/core";
-import { ComponentWrapper } from "@/app/_components/ui/common/component-wrapper";
-import { useState } from "react";
+'use client'
+import { ComponentWrapper } from '@/app/_components/ui/common/component-wrapper'
+import { Paper, Radio, Table, TableData, Text } from '@mantine/core'
+import { useState } from 'react'
 
 const tableData: TableData = {
-  head: ["", "ライトプラン", "スタンダードプラン", "プレミアムプラン"],
+  head: ['', 'ライトプラン', 'スタンダードプラン', 'プレミアムプラン'],
   body: [
-    ["料金", "1000円/月", "3000円/月", "6000円/月"],
-    ["ガイド可能回数", "1回/月", "4回/月", "12回/月"],
+    ['料金', '1000円/月', '3000円/月', '6000円/月'],
+    ['ガイド可能回数', '1回/月', '4回/月', '12回/月'],
   ],
-};
+}
 
-export function Demo() {
-  const [value, setValue] = useState("");
+export function GuidePlanForm() {
+  const [value, setValue] = useState('')
   return (
     <ComponentWrapper>
       <Text size="lg" fw={700} ta="center" pb={5}>
@@ -24,7 +24,7 @@ export function Demo() {
         プランは登録後に変更できます。
       </Text>
       <Paper shadow="sm" p={5}>
-        <Table data={tableData} style={{ fontSize: "10px" }} />
+        <Table data={tableData} style={{ fontSize: '10px' }} />
       </Paper>
       <Text size="xs" fw={400} py="1rem">
         プラン選択
@@ -36,5 +36,5 @@ export function Demo() {
         <Radio value="premium" label="プレミアムプラン" />
       </Radio.Group>
     </ComponentWrapper>
-  );
+  )
 }
