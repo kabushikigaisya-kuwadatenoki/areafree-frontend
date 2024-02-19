@@ -7,6 +7,8 @@ export default function Page() {
   const form = useForm({
     initialValues: {
       inquiry: '',
+      email: '',
+      username: '',
     },
   })
 
