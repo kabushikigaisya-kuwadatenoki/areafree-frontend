@@ -8,6 +8,11 @@ export const theme = createTheme({
     Accordion: {
       styles: {
         item: {
+          fontSize: '10px',
+          borderBottom: 'unset',
+        },
+        control: {
+          fontSize: '10px',
           borderBottom: '1px solid #33947D',
         },
       },
