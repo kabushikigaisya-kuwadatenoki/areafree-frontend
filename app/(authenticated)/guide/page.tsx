@@ -1,3 +1,4 @@
+import { DetailFilter } from '@/app/(authenticated)/_components/guide/detail-filter'
 import { GuideTabs } from '@/app/(authenticated)/_components/guide/tabs'
 import { SearchForm } from '@/app/_components/ui/common/search-form'
 import { Checkbox, Rating, Select, Text } from '@mantine/core'
@@ -8,6 +9,7 @@ export default function Page() {
     <>
       <GuideTabs />
       <SearchForm />
+      <DetailFilter />
     </>
   )
 }
