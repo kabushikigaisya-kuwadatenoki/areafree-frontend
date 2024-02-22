@@ -1,5 +1,5 @@
 'use client'
-import { Paper, Select, Stack } from '@mantine/core'
+import { Accordion, Paper, Select, Stack } from '@mantine/core'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -27,39 +27,48 @@ export function DetailFilter() {
   }, [updateFilters])
 
   return (
-    <Paper>
-      <Stack>
-        <Select
-          label="性別"
-          placeholder="選択してください"
-          data={['男性', '女性', 'その他']}
-          value={gender}
-          onChange={(value) => {
-            setGender(value || '')
-            updateFilters()
-          }}
-        />
-        <Select
-          label="対応状況"
-          placeholder="選択してください"
-          data={['対応可能', '対応不可']}
-          value={status}
-          onChange={(value) => {
-            setStatus(value || '')
-            updateFilters()
-          }}
-        />
-        <Select
-          label="評価"
-          placeholder="選択してください"
-          data={['高評価', '中評価', '低評価']}
-          value={evaluation}
-          onChange={(value) => {
-            setEvaluation(value || '')
-            updateFilters()
-          }}
-        />
-      </Stack>
+    <Paper maw={352} mx="auto" my="1em">
+      <Accordion>
+        <Accordion.Item value="detail">
+          <Accordion.Control style={{ fontSize: 14, background: '#CDE8E2' }}>
+            詳細条件を追加
+          </Accordion.Control>
+          <Accordion.Panel p={0} style={{ background: '#CDE8E2' }}>
+            <Stack bg="#ffffff" p="md" mt="sm" style={{ borderRadius: '16px' }}>
+              <Select
+                label="性別"
+                placeholder="すべて"
+                data={['男性', '女性', 'その他']}
+                value={gender}
+                onChange={(value) => {
+                  setGender(value || '')
+                  updateFilters()
+                }}
+              />
+              <Select
+                label="対応状況"
+                placeholder="すべて"
+                data={['対応可能', '対応不可']}
+                value={status}
+                onChange={(value) => {
+                  setStatus(value || '')
+                  updateFilters()
+                }}
+              />
+              <Select
+                label="評価"
+                placeholder="すべて"
+                data={['高評価', '中評価', '低評価']}
+                value={evaluation}
+                onChange={(value) => {
+                  setEvaluation(value || '')
+                  updateFilters()
+                }}
+              />
+            </Stack>
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </Paper>
   )
 }
