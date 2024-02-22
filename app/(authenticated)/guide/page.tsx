@@ -31,11 +31,27 @@ const GuideIndexItems = () => {
     </>
   )
 }
+const GuideSearchMap = () => {
+  return (
+    <>
+      <Paper bg="#CDE8E2" p="xs">
+        <SearchForm />
+        <DetailFilter />
+      </Paper>
+      <Suspense key={guide_dummy.id} fallback={<LoadingOverlay />}>
+        <GuideCard guide={guide_dummy} />
+      </Suspense>
+    </>
+  )
+}
 
 export default function Page() {
   return (
     <>
-      <UserTabs indexGuideComponents={<GuideIndexItems />} />
+      <UserTabs
+        indexGuideComponents={<GuideIndexItems />}
+        searchMapComponents={<GuideSearchMap />}
+      />
     </>
   )
 }
