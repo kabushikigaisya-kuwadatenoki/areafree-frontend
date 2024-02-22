@@ -17,6 +17,7 @@ const pages = [
   { name: '仮会員登録完了', type: '一般', link: '/register/temporary' },
   { name: 'ガイド登録', type: '一般', link: '/guide/register' },
   { name: 'ガイド登録完了', type: '一般', link: '/guide/register/complete' },
+  { name: 'ガイド詳細', type: '一般', link: '/guide/1' },
   { name: '利用規約', type: '一般', link: '/terms' },
   { name: '使用方法', type: '一般', link: '/how-to-use' },
   { name: 'プライバシーポリシー', type: '一般', link: '/privacy' },
