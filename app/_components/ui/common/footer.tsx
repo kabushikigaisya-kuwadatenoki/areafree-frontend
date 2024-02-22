@@ -4,7 +4,14 @@ import Link from 'next/link'
 export function Footer() {
   return (
     <>
-      <Flex h="95px" align="center" justify="center" bg="url(/advertise-image.png)" bgsz="contain">
+      <Flex
+        h="95px"
+        align="center"
+        justify="center"
+        bg="url(/advertise-image.png)"
+        bgsz="contain"
+        mt="md"
+      >
         <Text c="white" size="40px" fw={700}>
           広告
         </Text>

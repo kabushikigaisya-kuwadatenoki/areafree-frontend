@@ -41,14 +41,14 @@ export function SearchForm() {
 
   return (
     <>
-      <Box maw={290} mx="auto">
+      <Box maw={352} mx="auto">
         <Group justify="space-between">
           <IconSearch size={24} />
           <TextInput
             w="85%"
             placeholder="フリーワード"
             onChange={(event) => handleSearchChange(event.currentTarget.value)}
-            defaultValue={searchParams.get('query') || ''}
+            defaultValue={searchParams.get('query')?.toString() || ''}
             mb="sm"
           />
         </Group>
