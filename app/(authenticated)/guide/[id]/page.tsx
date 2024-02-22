@@ -4,13 +4,13 @@ import { Button, Stack } from '@mantine/core'
 
 export default function Page({ params }: { params: { id: string } }) {
   const guide_dummy = {
-    id: params.id,
+    id: 1,
     nickname: 'TaroTokyo',
     evaluation: 3.7,
     created_at: '2024-02-22T15:00:00Z',
     available_languages: ['English', 'Japanese'],
     comment: 'Very knowledgeable and friendly guide!',
-    favorite: true,
+    is_favorite: true,
     profile_image: '/prof-dummy.png',
     address: '東京都新宿区',
   }
@@ -21,7 +21,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <Button variant="filled" display="block" w="100%" maw="320px">
           このガイドを評価する
         </Button>
-        <GuideCard guide={guide_dummy} />
+        <GuideCard guides={guide_dummy} />
         <KebabMenu />
       </Stack>
     </>

@@ -6,17 +6,41 @@ import { LoadingOverlay } from '@mantine/core'
 import { Paper } from '@mantine/core'
 import { Suspense } from 'react'
 
-const guide_dummy = {
-  id: '1',
-  nickname: 'TaroTokyo',
-  evaluation: 3.7,
-  created_at: '2024-02-22T15:00:00Z',
-  available_languages: ['English', 'Japanese'],
-  comment: 'Very knowledgeable and friendly guide!',
-  favorite: true,
-  profile_image: '/prof-dummy.png',
-  address: '東京都新宿区',
-}
+const guide_dummy = [
+  {
+    id: 1,
+    nickname: 'TaroTokyo',
+    evaluation: 3.7,
+    created_at: '2024-02-22T15:00:00Z',
+    available_languages: ['English', 'Japanese'],
+    comment: 'Very knowledgeable and friendly guide!',
+    is_favorite: true,
+    profile_image: '/prof-dummy.png',
+    address: '東京都新宿区',
+  },
+  {
+    id: 2,
+    nickname: 'TaroTokyo',
+    evaluation: 3.7,
+    created_at: '2024-02-22T15:00:00Z',
+    available_languages: ['English', 'Japanese'],
+    comment: 'Very knowledgeable and friendly guide!',
+    is_favorite: true,
+    profile_image: '/prof-dummy.png',
+    address: '東京都新宿区',
+  },
+  {
+    id: 3,
+    nickname: 'TaroTokyo',
+    evaluation: 3.7,
+    created_at: '2024-02-22T15:00:00Z',
+    available_languages: ['English', 'Japanese'],
+    comment: 'Very knowledgeable and friendly guide!',
+    is_favorite: true,
+    profile_image: '/prof-dummy.png',
+    address: '東京都新宿区',
+  },
+]
 
 const GuideIndexItems = () => {
   return (
@@ -25,8 +49,8 @@ const GuideIndexItems = () => {
         <SearchForm />
         <DetailFilter />
       </Paper>
-      <Suspense key={guide_dummy.id} fallback={<LoadingOverlay />}>
-        <GuideCard guide={guide_dummy} />
+      <Suspense fallback={<LoadingOverlay />}>
+        <GuideCard guides={guide_dummy} />
       </Suspense>
     </>
   )
@@ -38,8 +62,8 @@ const GuideSearchMap = () => {
         <SearchForm />
         <DetailFilter />
       </Paper>
-      <Suspense key={guide_dummy.id} fallback={<LoadingOverlay />}>
-        <GuideCard guide={guide_dummy} />
+      <Suspense fallback={<LoadingOverlay />}>
+        <GuideCard guides={guide_dummy} />
       </Suspense>
     </>
   )
