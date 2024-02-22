@@ -4,9 +4,10 @@ import React from 'react'
 
 type Props = {
   indexGuideComponents: React.ReactNode // ここでPropsの型を定義
+  searchMapComponents: React.ReactNode
 }
 
-export function UserTabs({ indexGuideComponents }: Props) {
+export function UserTabs({ indexGuideComponents, searchMapComponents }: Props) {
   return (
     <Tabs defaultValue="indexGuide">
       <Tabs.List grow justify="center">
@@ -15,10 +16,7 @@ export function UserTabs({ indexGuideComponents }: Props) {
       </Tabs.List>
 
       <Tabs.Panel value="indexGuide">{indexGuideComponents}</Tabs.Panel>
-      <Tabs.Panel value="searchMap">
-        {/* ここに他の内容を表示 */}
-        test
-      </Tabs.Panel>
+      <Tabs.Panel value="searchMap">{searchMapComponents}</Tabs.Panel>
     </Tabs>
   )
 }
