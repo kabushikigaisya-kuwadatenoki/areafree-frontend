@@ -1,7 +1,6 @@
 import { createTheme } from '@mantine/core'
 
 export const theme = createTheme({
-  /* Put your mantine theme override here */
   components: {
     Accordion: {
       styles: {
@@ -13,6 +12,14 @@ export const theme = createTheme({
           fontSize: '10px',
           borderBottom: '1px solid #33947D',
         },
+      },
+    },
+    ActionIcon: {
+      defaultProps: {
+        variant: 'default',
+      },
+      styles: {
+        border: 'unset',
       },
     },
   },
