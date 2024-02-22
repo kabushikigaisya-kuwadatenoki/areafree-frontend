@@ -4,70 +4,77 @@ import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-type Props = {
-  guide: {
-    id: string
-    nickname: string
-    evaluation: number
-    created_at: string
-    available_languages: string[]
-    comment: string
-    favorite: boolean
-    profile_image: string
-    is_favorite?: boolean
-  }
+type Guide = {
+  id: number
+  nickname: string
+  evaluation: number
+  created_at: string
+  available_languages: string[]
+  comment: string
+  profile_image: string
+  address: string
+  is_favorite?: boolean
 }
 
-export function GuideCard({ guide }: { guide: Props['guide'] }) {
+type Props = {
+  guides: Guide | Guide[]
+}
+
+export function GuideCard({ guides }: Props) {
+  const guidesArray = Array.isArray(guides) ? guides : [guides]
   return (
-    <Card
-      withBorder
-      maw={352}
-      mx="auto"
-      shadow="xs"
-      p="md"
-      mt="xs"
-      radius="md"
-      component={Link}
-      href={`guide/${guide.id}`}
-    >
-      <Group>
-        <Image src={guide.profile_image} alt={guide.nickname} width={87} height={76} />
-        <Box>
-          <Text size="10px" mb="xs">
-            ガイド評価
-          </Text>
-          <Rating size="xs" value={guide.evaluation} fractions={4} />
+    <>
+      {guidesArray.map((item) => (
+        <Card
+          withBorder
+          maw={352}
+          mx="auto"
+          shadow="xs"
+          p="md"
+          mt="xs"
+          radius="md"
+          component={Link}
+          href={`guide/${item.id}`}
+        >
           <Group>
-            <Text size="md" fw={700} mb="sm">
-              {guide.nickname}
-            </Text>
-            <IconStar fontWeight={100} width={16} height={16} />
-          </Group>
-          <Group>
+            <Image src={item.profile_image} alt={item.nickname} width={87} height={76} />
             <Box>
-              <Text size="10px">ガイド歴</Text>
-              <Text size="10px" mt="5px">
-                {guide.created_at}
+              <Text size="10px" mb="xs">
+                ガイド評価
               </Text>
-            </Box>
-            <Box>
-              <Text size="10px">対応言語</Text>
+              <Rating size="xs" value={item.evaluation} fractions={4} />
               <Group>
-                {guide.available_languages.map((item) => (
+                <Text size="md" fw={700} mb="sm">
+                  {item.nickname}
+                </Text>
+                <IconStar fontWeight={100} width={16} height={16} />
+              </Group>
+              <Group>
+                <Box>
+                  <Text size="10px">ガイド歴</Text>
                   <Text size="10px" mt="5px">
-                    {item}
+                    {item.created_at}
                   </Text>
-                ))}
+                </Box>
+                <Box>
+                  <Text size="10px">対応言語</Text>
+                  <Group>
+                    {item.available_languages.map((item) => (
+                      <Text size="10px" mt="5px">
+                        {item}
+                      </Text>
+                    ))}
+                  </Group>
+                </Box>
               </Group>
             </Box>
           </Group>
-        </Box>
-      </Group>
-      <Text size="10px" my={10}>
-        コメント
-      </Text>
-      <Text size="xs">{guide.comment}</Text>
-    </Card>
+          <Text size="10px" my={10}>
+            コメント
+          </Text>
+          <Text size="xs">{item.comment}</Text>
+        </Card>
+      ))}
+    </>
   )
 }
