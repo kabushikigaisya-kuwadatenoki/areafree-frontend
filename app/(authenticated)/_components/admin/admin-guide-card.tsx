@@ -20,7 +20,7 @@ type Props = {
   guides: Guide | Guide[]
 }
 
-export function GuideCard({ guides }: Props) {
+export function AdminGuideCard({ guides }: Props) {
   const guidesArray = Array.isArray(guides) ? guides : [guides]
   return (
     <>
