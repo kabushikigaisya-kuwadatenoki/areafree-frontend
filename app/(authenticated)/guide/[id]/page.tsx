@@ -1,11 +1,11 @@
 import { GuideCard } from '@/app/(authenticated)/_components/guide/guide-card'
-import KebabMenu from '@/app/(authenticated)/_components/guide/kebab-menu'
+import KebabReport from '@/app/(authenticated)/_components/guide/kebab-report'
 import { Button, Stack } from '@mantine/core'
 
 export default function Page({ params }: { params: { id: string } }) {
   const guide_dummy = {
     id: 1,
-    nickname: 'TaroTokyo',
+    nickname: 'ニックネーム太郎',
     evaluation: 3.7,
     created_at: '2024-02-22T15:00:00Z',
     available_languages: ['English', 'Japanese'],
@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
           このガイドを評価する
         </Button>
         <GuideCard guides={guide_dummy} />
-        <KebabMenu />
+        <KebabReport nickname={guide_dummy.nickname} />
       </Stack>
     </>
   )
