@@ -89,7 +89,7 @@ export function UserProfileForm({ initialValues }: Props) {
       gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
       birthday: (value = '') =>
         !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
-        availableLanguages: (value: string[] = []) =>
+      availableLanguages: (value: string[] = []) =>
         value.some((lang) => lang === '未選択' || lang === '')
           ? '対応可能言語を選択してください'
           : null,
@@ -148,16 +148,6 @@ export function UserProfileForm({ initialValues }: Props) {
     <>
       <Box maw={290} mx="auto">
         <Paper shadow="lg" p="1rem" my="2rem" radius="lg">
-          {registerStatus === 'register' && pathname !== '/profile' && (
-            <Text size="lg" fw={700} ta="center">
-              新規登録
-            </Text>
-          )}
-          {registerStatus === 'confirm' && pathname !== '/profile' && (
-            <Text size="lg" fw={700} ta="center">
-              登録情報確認
-            </Text>
-          )}
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <input
               type="file"
@@ -252,19 +242,16 @@ export function UserProfileForm({ initialValues }: Props) {
                 />
               </>
             ))}
-            {registerStatus !== 'confirm' && (
-              <>
-                {form.errors.availableLanguages && (
-                  <Text c="red" size="xs" mt={5}>
-                    {form.errors.availableLanguages}
-                  </Text>
-                )}
-                <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
-                  ＋対応可能言語を追加
+            <>
+              {form.errors.availableLanguages && (
+                <Text c="red" size="xs" mt={5}>
+                  {form.errors.availableLanguages}
                 </Text>
-              </>
-            )}
-            {/* このテキストをクリックすると対応可能言語のNativeSelectが増える */}
+              )}
+              <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
+                ＋対応可能言語を追加
+              </Text>
+            </>
             <TextInput
               label="電話番号"
               {...form.getInputProps('phoneNumber')}
@@ -302,53 +289,43 @@ export function UserProfileForm({ initialValues }: Props) {
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <Group justify="center" mt="md">
-              {registerStatus !== 'confirm' && pathname !== '/profile' && (
-                <Button type="submit">確認</Button>
-              )}
-              {registerStatus !== 'register' && pathname !== '/profile' && (
-                <>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setRegisterStatus('register')
-                      handleScrollToTop()
-                    }}
-                  >
-                    修正
-                  </Button>
-                  <Button type="submit">登録</Button>
-                </>
-              )}
-              {pathname === '/profile' && (
-                <Button type="submit">
-                  保存
+              <Button type="submit">確認</Button>
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setRegisterStatus('register')
+                    handleScrollToTop()
+                  }}
+                >
+                  修正
                 </Button>
-              )}
+                <Button type="submit">登録</Button>
+              </>
+              {pathname === '/profile' && <Button type="submit">保存</Button>}
             </Group>
           </form>
         </Paper>
-        {pathname === '/profile' && (
-          <>
-            <Group justify="flex-end">
-              <Stack>
-                <Text size="xs" c="red" component={Link} href="/">
-                  パスワードを変更する
-                </Text>
-                <Text size="xs" c="red" component={Link} href="/">
-                  ブロックしているユーザー
-                </Text>
-              </Stack>
-            </Group>
-            <Group justify="flex-end" my="2rem">
-              <Button component={Link} href="/guide/register">
-                ガイド登録
-              </Button>
-              <Button component={Link} href="/" color="red" variant="outline">
-                退会
-              </Button>
-            </Group>
-          </>
-        )}
+        <>
+          <Group justify="flex-end">
+            <Stack>
+              <Text size="xs" c="red" component={Link} href="/">
+                パスワードを変更する
+              </Text>
+              <Text size="xs" c="red" component={Link} href="/">
+                ブロックしているユーザー
+              </Text>
+            </Stack>
+          </Group>
+          <Group justify="flex-end" my="2rem">
+            <Button component={Link} href="/guide/register">
+              ガイド登録
+            </Button>
+            <Button component={Link} href="/" color="red" variant="outline">
+              退会
+            </Button>
+          </Group>
+        </>
       </Box>
     </>
   )
