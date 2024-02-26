@@ -1,5 +1,5 @@
 import { Bar } from '@/app/(authenticated)/_components/notice/bar'
-
+import { BreadBrumbs } from '@/app/_components/ui/common/bread-crumbs'
 export default function Page() {
   const notice = [
     {
@@ -24,5 +24,10 @@ export default function Page() {
       badge: true,
     },
   ]
-  return <Bar notice={notice} />
+  return (
+    <>
+      <BreadBrumbs text="通知" link="/" />
+      <Bar notice={notice} />
+    </>
+  )
 }
