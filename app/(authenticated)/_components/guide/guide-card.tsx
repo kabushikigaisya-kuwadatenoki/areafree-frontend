@@ -47,7 +47,9 @@ export function GuideCard({ guides }: Props) {
                 <Text size="md" fw={700} mb="sm">
                   {item.nickname}
                 </Text>
-                <IconStar fontWeight={100} width={16} height={16} />
+                <Link href="guide/evaluation">
+                  <IconStar fontWeight={100} width={16} height={16} />
+                </Link>
               </Group>
               <Group>
                 <Box>
