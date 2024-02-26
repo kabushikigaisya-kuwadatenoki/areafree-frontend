@@ -1,6 +1,7 @@
+import { EvaluationModal } from '@/app/(authenticated)/_components/guide/evaluation-modal'
 import { GuideCard } from '@/app/(authenticated)/_components/guide/guide-card'
-import KebabReport from '@/app/(authenticated)/_components/guide/kebab-report'
-import { Button, Stack } from '@mantine/core'
+import { KebabReport } from '@/app/(authenticated)/_components/guide/kebab-report'
+import { Stack } from '@mantine/core'
 
 export default function Page({ params }: { params: { id: number } }) {
   const guide_dummy = {
@@ -17,10 +18,8 @@ export default function Page({ params }: { params: { id: number } }) {
 
   return (
     <>
-      <Stack justify="center" align="center" gap={0} mt="md">
-        <Button variant="filled" display="block" w="100%" maw="320px">
-          このガイドを評価する
-        </Button>
+      <EvaluationModal nickname={guide_dummy.nickname} id={guide_dummy.id} />
+      <Stack justify="center" align="center" gap={0} mt="sm">
         <GuideCard guides={guide_dummy} />
         <KebabReport nickname={guide_dummy.nickname} id={params.id} />
       </Stack>
