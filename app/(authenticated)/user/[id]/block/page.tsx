@@ -1,5 +1,5 @@
+import { BreadBrumbs } from '@/app/_components/ui/common/bread-crumbs'
 import { BlockedGuideCard } from './_components/blocked-guide-card'
-
 export default function Page({ params }: { params: { id: number } }) {
   const guide_dummy = [
     {
@@ -37,5 +37,10 @@ export default function Page({ params }: { params: { id: number } }) {
     },
   ]
 
-  return <BlockedGuideCard guides={guide_dummy} />
+  return (
+    <>
+      <BreadBrumbs text="ブロックリスト" link="/user" />
+      <BlockedGuideCard guides={guide_dummy} />
+    </>
+  )
 }
