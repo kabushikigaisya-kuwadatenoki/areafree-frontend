@@ -2,7 +2,7 @@ import { GuideCard } from '@/app/(authenticated)/_components/guide/guide-card'
 import KebabReport from '@/app/(authenticated)/_components/guide/kebab-report'
 import { Button, Stack } from '@mantine/core'
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: number } }) {
   const guide_dummy = {
     id: 1,
     nickname: 'ニックネーム太郎',
@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
           このガイドを評価する
         </Button>
         <GuideCard guides={guide_dummy} />
-        <KebabReport nickname={guide_dummy.nickname} />
+        <KebabReport nickname={guide_dummy.nickname} id={params.id} />
       </Stack>
     </>
   )
