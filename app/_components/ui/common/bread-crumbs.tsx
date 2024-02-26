@@ -5,7 +5,7 @@ import Link from 'next/link'
 export function BreadBrumbs({ link, text }: { link: string; text: string }) {
   return (
     <>
-      <Paper bg="secondary" component={Link} href={link} p={5} radius="unset">
+      <Paper bg="#CDE8E2" component={Link} href={link} p={5} radius="unset">
         <Group>
           <IconChevronLeft color="#33947D" stroke={3} />
           <Text fw={700}>{text}</Text>
