@@ -20,6 +20,8 @@ export default function Page() {
       profile_image: '/prof-dummy.png',
       address: '東京都新宿区',
       badge: true,
+      reason: '差別',
+      report_comment: '非常に不愉快でした。',
       reportedUsers: [
         {
           id: 'allijcvkh33',
@@ -68,6 +70,38 @@ export default function Page() {
       created_at: '2023-02-15',
       service_used: 12,
       badge: true,
+    },
+    {
+      id: 'akjhdkjhg00',
+      type: 'guide',
+      first_name: '次郎',
+      last_name: '山田',
+      evaluation: 3.7,
+      created_at: '2024-02-22T15:00:00Z',
+      report_count: 3,
+      reported_count: 1,
+      comment: '結構自己評価低めです',
+      is_favorite: true,
+      profile_image: '/prof-dummy.png',
+      address: '東京都新宿区',
+      badge: true,
+      reason: '態度が悪い',
+      report_comment:
+        'テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。テストコメント。',
+      reportedUsers: [
+        {
+          id: 'allijcvkh33',
+          type: 'user',
+          first_name: '太郎',
+          last_name: '山田',
+          plan: 'プレミアム',
+          report_count: 2,
+          notice_count: 3,
+          created_at: '2023-01-01',
+          service_used: 5,
+          badge: false,
+        },
+      ],
     },
   ]
 
