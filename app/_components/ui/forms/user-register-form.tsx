@@ -38,7 +38,7 @@ type Props = {
   }
 }
 
-export function UserRegister({ initialValues }: Props) {
+export function UserRegisterForm({ initialValues }: Props) {
   const ProfileUpload = '/profileUpload.svg'
   const [registerStatus, setRegisterStatus] = useState('register')
   const [languageInputs, setLanguageInputs] = useState([{ id: Math.random(), value: '' }])
@@ -64,6 +64,7 @@ export function UserRegister({ initialValues }: Props) {
 
   const form = useForm({
     initialValues: initialValues || defaultValues,
+
     validate: {
       lastName: (value = '') =>
         value.trim().length < 1 || value.trim().length > 50
@@ -237,6 +238,7 @@ export function UserRegister({ initialValues }: Props) {
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             {languageInputs.map((input, index) => (
+              <>
                 <NativeSelect
                   key={input.id}
                   label={`対応可能言語 ${index + 1}`}
@@ -248,6 +250,7 @@ export function UserRegister({ initialValues }: Props) {
                   withAsterisk
                   styles={{ input: { opacity: '1', color: '#555' } }}
                 />
+              </>
             ))}
             {registerStatus !== 'confirm' && (
               <>
@@ -316,6 +319,7 @@ export function UserRegister({ initialValues }: Props) {
                   <Button type="submit">登録</Button>
                 </>
               )}
+              {pathname === '/profile' && <Button type="submit">保存</Button>}
             </Group>
           </form>
         </Paper>

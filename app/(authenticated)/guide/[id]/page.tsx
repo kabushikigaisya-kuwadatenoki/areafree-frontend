@@ -1,5 +1,5 @@
 import { EvaluationModal } from '@/app/(authenticated)/_components/guide/evaluation-modal'
-import { GuideCard } from '@/app/(authenticated)/_components/guide/guide-card'
+import { GuideCardDetail } from '@/app/(authenticated)/_components/guide/guide-card-detail'
 import { KebabReport } from '@/app/(authenticated)/_components/guide/kebab-report'
 import { Stack } from '@mantine/core'
 
@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { id: number } }) {
     <>
       <EvaluationModal nickname={guide_dummy.nickname} id={guide_dummy.id} />
       <Stack justify="center" align="center" gap={0} mt="sm">
-        <GuideCard guides={guide_dummy} />
+        <GuideCardDetail guides={guide_dummy} />
         <KebabReport nickname={guide_dummy.nickname} id={params.id} />
       </Stack>
     </>

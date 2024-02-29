@@ -1,5 +1,7 @@
 'use client'
-import { Box, Card, Group, Rating, Text } from '@mantine/core'
+import { Box, Button, Card, Group, Rating, Text } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { useDisclosure } from '@mantine/hooks'
 import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -22,17 +24,20 @@ type Props = {
   guides: Guide | Guide[]
 }
 
-export function GuideCard({ guides }: Props) {
+export function BlockedGuideCard({ guides }: Props) {
+  const form = useForm({
+    initialValues: {
+      id: Array.isArray(guides) ? guides[0].id : guides.id,
+    },
+  })
+
   const guidesArray = Array.isArray(guides) ? guides : [guides]
   const router = useRouter()
+  const [opened, { open, close }] = useDisclosure()
 
   const MoveEvaluation = (e: React.MouseEvent, id: number) => {
     e.stopPropagation()
     router.push(`/guide/${id}/evaluation`)
-  }
-
-  const handleCardClick = (id: number) => {
-    router.push(`/guide/${id}`)
   }
 
   return (
@@ -46,9 +51,16 @@ export function GuideCard({ guides }: Props) {
           p="md"
           mt="xs"
           radius="md"
-          onClick={() => handleCardClick(item.id)}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', position: 'relative' }}
         >
+          <Button
+            style={{ position: 'absolute', right: '16px' }}
+            display="inline"
+            bg="red"
+            onClick={open}
+          >
+            解除
+          </Button>
           <Group>
             <Image src={item.profile_image} alt={item.nickname} width={87} height={76} />
             <Box w="60%">

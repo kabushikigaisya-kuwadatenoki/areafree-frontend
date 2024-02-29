@@ -3,8 +3,6 @@ import { Box, Card, Group, Rating, Text } from '@mantine/core'
 import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import React from 'react'
 
 type Guide = {
   id: number
@@ -22,33 +20,12 @@ type Props = {
   guides: Guide | Guide[]
 }
 
-export function GuideCard({ guides }: Props) {
+export function GuideCardDetail({ guides }: Props) {
   const guidesArray = Array.isArray(guides) ? guides : [guides]
-  const router = useRouter()
-
-  const MoveEvaluation = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation()
-    router.push(`/guide/${id}/evaluation`)
-  }
-
-  const handleCardClick = (id: number) => {
-    router.push(`/guide/${id}`)
-  }
-
   return (
     <>
       {guidesArray.map((item) => (
-        <Card
-          withBorder
-          maw={352}
-          mx="auto"
-          shadow="xs"
-          p="md"
-          mt="xs"
-          radius="md"
-          onClick={() => handleCardClick(item.id)}
-          style={{ cursor: 'pointer' }}
-        >
+        <Card withBorder maw={352} mx="auto" shadow="xs" p="md" mt="xs" radius="md">
           <Group>
             <Image src={item.profile_image} alt={item.nickname} width={87} height={76} />
             <Box w="60%">
@@ -60,12 +37,9 @@ export function GuideCard({ guides }: Props) {
                 <Text size="md" fw={700} mb="sm">
                   {item.nickname}
                 </Text>
-                <IconStar
-                  fontWeight={100}
-                  width={16}
-                  height={16}
-                  onClick={(e) => MoveEvaluation(e, item.id)}
-                />
+                <Link href={`${item.id}/evaluation`}>
+                  <IconStar fontWeight={100} width={16} height={16} />
+                </Link>
               </Group>
               <Group>
                 <Box>
