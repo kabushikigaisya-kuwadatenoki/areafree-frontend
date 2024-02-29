@@ -1,4 +1,5 @@
 'use client'
+import { SearchNotice } from '@/app/_components/ui/common/search-notice'
 import { SearchReport } from '@/app/_components/ui/common/search-report'
 import { Tabs } from '@mantine/core'
 import React from 'react'
@@ -20,9 +21,14 @@ export function AdminTabs({ indexReportComponents, indexNoticeComponents }: Prop
         </Tabs.Tab>
       </Tabs.List>
 
-      <SearchReport />
-      <Tabs.Panel value="indexReport">{indexReportComponents}</Tabs.Panel>
-      <Tabs.Panel value="indexNotice">{indexNoticeComponents}</Tabs.Panel>
+      <Tabs.Panel value="indexReport">
+        <SearchReport />
+        {indexReportComponents}
+      </Tabs.Panel>
+      <Tabs.Panel value="indexNotice">
+        <SearchNotice />
+        {indexNoticeComponents}
+      </Tabs.Panel>
     </Tabs>
   )
 }

@@ -1,11 +1,12 @@
 import { AdminGuideCard } from '@/app/(authenticated)/_components/admin/admin-guide-card'
 import { AdminTabs } from '@/app/(authenticated)/_components/admin/admin-tabs'
 import { AdminUserCard } from '@/app/(authenticated)/_components/admin/admin-user-card'
+import { NotificationList } from '@/app/(authenticated)/_components/admin/notification-list'
 import { UserNotificationType } from '@/app/(authenticated)/_type/type'
 import { ExtendedGuideNotificationType } from '@/app/(authenticated)/_type/type'
 
 export default function Page() {
-  const notifications = [
+  const report_dummy = [
     {
       id: '1097gakkjhKUHkjgna',
       type: 'guide',
@@ -105,21 +106,47 @@ export default function Page() {
     },
   ]
 
+  const notifications_dummy = [
+    {
+      id: 'hogehuga123',
+      title: '利用規約が改訂されました。',
+      created_at: '2024-02-22T15:00:00Z',
+    },
+    {
+      id: 'hogehuga124',
+      title: '利用規約が改訂されました。',
+      created_at: '2024-02-22T15:00:00Z',
+    },
+    {
+      id: 'hogehuga125',
+      title: '利用規約が改訂されました。',
+      created_at: '2024-02-22T15:00:00Z',
+    },
+  ]
+
   const ReportComponent = () => {
     return (
       <>
-        {notifications.map((notification) => {
-          if (notification.type === 'guide') {
+        {report_dummy.map((report) => {
+          if (report.type === 'guide') {
             // notification を ExtendedGuideNotificationType として扱う
-            const guideNotification = notification as ExtendedGuideNotificationType
+            const guideNotification = report as ExtendedGuideNotificationType
             return <AdminGuideCard key={guideNotification.id} guides={guideNotification} />
           }
-          if (notification.type === 'user') {
+          if (report.type === 'user') {
             // notification を UserNotificationType として扱う
-            const userNotification = notification as UserNotificationType
+            const userNotification = report as UserNotificationType
             return <AdminUserCard key={userNotification.id} users={userNotification} />
           }
         })}
+      </>
+    )
+  }
+
+  const NoticeComponent = () => {
+    return (
+      <>
+        <NotificationList notices={notifications_dummy} />
       </>
     )
   }
@@ -128,7 +155,7 @@ export default function Page() {
     <>
       <AdminTabs
         indexReportComponents={<ReportComponent />}
-        indexNoticeComponents={<ReportComponent />}
+        indexNoticeComponents={<NoticeComponent />}
       />
     </>
   )
