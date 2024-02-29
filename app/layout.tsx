@@ -2,6 +2,7 @@ import '@/app/global.css'
 import { theme } from '@/theme'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
+import '@mantine/dates/styles.css'
 import React from 'react'
 
 export const metadata = {

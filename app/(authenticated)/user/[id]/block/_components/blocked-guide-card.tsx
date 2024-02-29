@@ -1,7 +1,6 @@
 'use client'
 import { Box, Button, Card, Group, Rating, Text } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useDisclosure } from '@mantine/hooks'
 import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -33,7 +32,6 @@ export function BlockedGuideCard({ guides }: Props) {
 
   const guidesArray = Array.isArray(guides) ? guides : [guides]
   const router = useRouter()
-  const [opened, { open, close }] = useDisclosure()
 
   const MoveEvaluation = (e: React.MouseEvent, id: number) => {
     e.stopPropagation()
@@ -53,12 +51,7 @@ export function BlockedGuideCard({ guides }: Props) {
           radius="md"
           style={{ cursor: 'pointer', position: 'relative' }}
         >
-          <Button
-            style={{ position: 'absolute', right: '16px' }}
-            display="inline"
-            bg="red"
-            onClick={open}
-          >
+          <Button style={{ position: 'absolute', right: '16px' }} display="inline" bg="red">
             解除
           </Button>
           <Group>
