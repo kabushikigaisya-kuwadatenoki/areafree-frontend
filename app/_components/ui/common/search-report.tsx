@@ -37,15 +37,17 @@ export function SearchReport() {
 
   return (
     <>
-      <Box maw={352} mx="auto" bg="secondary">
+      <Box mx="auto" bg="#CDE8E2" py={5} px={10}>
         <Group justify="space-between" align="center">
-          <IconSearch size={24} />
-          <TextInput
-            w="50%"
-            placeholder="フリーワード"
-            onChange={(event) => handleSearchChange(event.currentTarget.value)}
-            defaultValue={searchParams.get('query')?.toString() || ''}
-          />
+          <Group align="center" gap={5}>
+            <IconSearch size={24} />
+            <TextInput
+              w="80%"
+              placeholder="フリーワード"
+              onChange={(event) => handleSearchChange(event.currentTarget.value)}
+              defaultValue={searchParams.get('query')?.toString() || ''}
+            />
+          </Group>
           <Button mb={0} size="sm" component={Link} href="/reoprt">
             凍結一覧
           </Button>
