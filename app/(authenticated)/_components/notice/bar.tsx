@@ -1,6 +1,7 @@
 import { Badge, Group, Paper, Stack, Text } from '@mantine/core'
 import Link from 'next/link'
 type Props = {
+  userId: number
   notice: {
     id: number
     date: string
@@ -10,7 +11,7 @@ type Props = {
   }[]
 }
 
-export function Bar({ notice }: Props) {
+export function Bar({ userId, notice }: Props) {
   return (
     <>
       {notice.map((item) => (
@@ -24,7 +25,7 @@ export function Bar({ notice }: Props) {
           mx="auto"
           my={8}
           component={Link}
-          href={`notice/${item.id}`}
+          href={`/user/${userId}/notice/${item.id}`}
         >
           <Group justify="space-between">
             <Stack gap={4}>
