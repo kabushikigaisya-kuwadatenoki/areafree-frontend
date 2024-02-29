@@ -12,6 +12,8 @@ export type GuideNotificationType = {
   report_count: number
   reported_count: number
   badge: boolean
+  reason: string
+  report_comment: string
 }
 export type UserNotificationType = {
   id: string
