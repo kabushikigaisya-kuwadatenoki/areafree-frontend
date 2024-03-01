@@ -12,9 +12,9 @@ export function GuideTabs({ profile, evaluation, plans }: Props) {
   return (
     <Tabs defaultValue="profile">
       <Tabs.List grow justify="center">
-        <Tabs.Tab value="profile">ガイド一覧</Tabs.Tab>
-        <Tabs.Tab value="evaluation">地図検索</Tabs.Tab>
-        <Tabs.Tab value="plans">地図検索</Tabs.Tab>
+        <Tabs.Tab value="profile">プロフィール</Tabs.Tab>
+        <Tabs.Tab value="evaluation">評価情報</Tabs.Tab>
+        <Tabs.Tab value="plans">プラン情報</Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value="profile">{profile}</Tabs.Panel>
