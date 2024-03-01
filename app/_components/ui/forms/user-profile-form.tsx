@@ -3,21 +3,22 @@ import {
   Box,
   Button,
   Group,
+  Modal,
   NativeSelect,
   Paper,
   PasswordInput,
   Stack,
   Text,
-  TextInput,
+  TextInput
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useWindowScroll } from '@mantine/hooks'
+import { useDisclosure } from "@mantine/hooks"
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { useState } from 'react'
-
 // 色については後々テーマで設定します。
 
 type Props = {
@@ -45,6 +46,7 @@ export function UserProfileForm({ initialValues }: Props) {
   const [scroll, scrollTo] = useWindowScroll()
   const router = useRouter()
   const pathname = usePathname()
+  const [opened, { open, close }] = useDisclosure(false)
 
   const defaultValues = {
     profileImage: '',
@@ -146,6 +148,20 @@ export function UserProfileForm({ initialValues }: Props) {
   }
   return (
     <>
+      <Modal opened={opened} onClose={close} title="退会する">
+        <Paper withBorder p={10} >
+          <Group justify='center'>
+            <Text size="sm" fw={700} ta="center">システム名を退会しますか？</Text>
+            <Text size='xs'>退会すると、アカウントに紐づくすべての情報が破棄され、復旧できません。</Text>
+          </Group>
+        </Paper>
+        <Group justify="flex-end" mt={16}>
+          <Button onClick={close} variant="outline">
+            キャンセル
+          </Button>
+          <Button bg="red" variant='fill' onClick={() => { console.log("退会") }}>退会</Button>
+        </Group>
+      </Modal>
       <Box maw={290} mx="auto">
         <Paper shadow="lg" p="1rem" my="2rem" radius="lg">
           <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -321,7 +337,7 @@ export function UserProfileForm({ initialValues }: Props) {
             <Button component={Link} href="/guide/register">
               ガイド登録
             </Button>
-            <Button component={Link} href="/" color="red" variant="outline">
+            <Button onClick={open} bg="red" variant="fill">
               退会
             </Button>
           </Group>

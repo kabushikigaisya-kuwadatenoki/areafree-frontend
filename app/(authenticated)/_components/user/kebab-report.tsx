@@ -53,8 +53,11 @@ export function KebabReport({ nickname, id }: { nickname: string; id: number }) 
             required
           />
           <Textarea label="コメント" {...form.getInputProps('comment')} autosize minRows={5} />
-          <Group justify="flex-end">
-            <Button type="submit" mt={16}>
+          <Group justify="flex-end" mt={16}>
+            <Button onClick={close} variant="outline">
+              閉じる
+            </Button>
+            <Button type="submit">
               通報
             </Button>
           </Group>
