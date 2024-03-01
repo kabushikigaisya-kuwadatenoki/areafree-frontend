@@ -45,9 +45,12 @@ export function EvaluationModal({ nickname, id }: { nickname: string; id: number
             <div style={{ color: 'red', marginTop: 4 }}>{form.errors.rating}</div>
           )}
           <Textarea label="コメント" autosize minRows={5} {...form.getInputProps('comment')} />
-          <Group justify="flex-end">
-            <Button type="submit" mt={16}>
-              通報
+          <Group justify="flex-end" mt={16}>
+            <Button onClick={close} variant="outline" >
+              閉じる
+            </Button>
+            <Button type="submit">
+              登録
             </Button>
           </Group>
         </form>
