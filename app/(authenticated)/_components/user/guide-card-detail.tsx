@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 type Guide = {
-  id: number
+  id: string
   nickname: string
   evaluation: number
   created_at: string
@@ -25,7 +25,7 @@ export function GuideCardDetail({ guides }: Props) {
   return (
     <>
       {guidesArray.map((item) => (
-        <Card withBorder maw={352} mx="auto" shadow="xs" p="md" mt="xs" radius="md">
+        <Card withBorder maw={352} mx="auto" shadow="xs" p="md" mt="xs" radius="md" key={item.id}>
           <Group>
             <Image src={item.profile_image} alt={item.nickname} width={87} height={76} />
             <Box w="60%">
@@ -52,7 +52,7 @@ export function GuideCardDetail({ guides }: Props) {
                   <Text size="10px">対応言語</Text>
                   <Group>
                     {item.available_languages.map((item) => (
-                      <Text size="10px" mt="5px">
+                      <Text size="10px" mt="5px" key={item}>
                         {item}
                       </Text>
                     ))}

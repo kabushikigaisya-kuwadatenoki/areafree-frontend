@@ -1,4 +1,5 @@
 'use client'
+import { formatDate } from '@/app/_functions/format-ate'
 import { Box, Card, Group, Rating, Text } from '@mantine/core'
 import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
@@ -7,7 +8,7 @@ import React from 'react'
 
 type Guide = {
   id: string
-  nickname: string
+  guide_nickname: string
   evaluation: number
   created_at: string
   available_languages: string[]
@@ -37,7 +38,7 @@ export function GuideCard({ guides, userId }: Props) {
 
   return (
     <>
-      {guidesArray.map((item) => (
+      {guidesArray.map((guide) => (
         <Card
           withBorder
           maw={352}
@@ -46,40 +47,41 @@ export function GuideCard({ guides, userId }: Props) {
           p="md"
           mt="xs"
           radius="md"
-          onClick={() => handleCardClick(item.id, userId)}
+          onClick={() => handleCardClick(guide.id, userId)}
           style={{ cursor: 'pointer' }}
+          key={guide.id}
         >
           <Group>
-            <Image src={item.profile_image} alt={item.nickname} width={87} height={76} />
+            <Image src={guide.profile_image} alt={guide.guide_nickname} width={87} height={76} />
             <Box w="60%">
               <Text size="10px" mb="xs">
                 ガイド評価
               </Text>
-              <Rating size="xs" value={item.evaluation} fractions={4} />
+              <Rating size="xs" value={guide.evaluation} fractions={4} />
               <Group>
                 <Text size="md" fw={700} mb="sm">
-                  {item.nickname}
+                  {guide.guide_nickname}
                 </Text>
                 <IconStar
                   fontWeight={100}
                   width={16}
                   height={16}
-                  onClick={(e) => MoveEvaluation(e, userId, item.id)}
+                  onClick={(e) => MoveEvaluation(e, userId, guide.id)}
                 />
               </Group>
               <Group>
                 <Box>
                   <Text size="10px">ガイド歴</Text>
                   <Text size="10px" mt="5px">
-                    {item.created_at}
+                    {formatDate(guide.created_at)}
                   </Text>
                 </Box>
                 <Box>
                   <Text size="10px">対応言語</Text>
                   <Group>
-                    {item.available_languages.map((item) => (
-                      <Text size="10px" mt="5px">
-                        {item}
+                    {guide.available_languages?.map((language) => (
+                      <Text size="10px" mt="5px" key={language}>
+                        {language}
                       </Text>
                     ))}
                   </Group>
@@ -90,7 +92,7 @@ export function GuideCard({ guides, userId }: Props) {
           <Text size="10px" my={10}>
             コメント
           </Text>
-          <Text size="xs">{item.comment}</Text>
+          <Text size="xs">{guide.comment}</Text>
         </Card>
       ))}
     </>

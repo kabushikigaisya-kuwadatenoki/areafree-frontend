@@ -3,7 +3,6 @@ import { Box, Button, Card, Group, Rating, Text } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
@@ -50,6 +49,7 @@ export function BlockedGuideCard({ guides }: Props) {
           mt="xs"
           radius="md"
           style={{ cursor: 'pointer', position: 'relative' }}
+          key={item.id}
         >
           <Button style={{ position: 'absolute', right: '16px' }} display="inline" bg="red">
             解除
@@ -83,7 +83,7 @@ export function BlockedGuideCard({ guides }: Props) {
                   <Text size="10px">対応言語</Text>
                   <Group>
                     {item.available_languages.map((item) => (
-                      <Text size="10px" mt="5px">
+                      <Text size="10px" mt="5px" key={item}>
                         {item}
                       </Text>
                     ))}
