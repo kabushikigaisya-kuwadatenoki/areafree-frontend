@@ -63,6 +63,7 @@ export function AdminGuideCard({ guides }: Props) {
             }}
             onClick={open}
             key={item.id}
+
           >
             <Group align="start" justify="space-between">
               {item.badge && (
@@ -201,7 +202,7 @@ export function AdminGuideCard({ guides }: Props) {
               </Text>
             </Card>
             {item.reportedUsers?.map((user) => (
-              <AdminUserCard users={user} />
+              <AdminUserCard key={user.id} users={user} />
             ))}
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <TextInput size="xs" mt={5} label="通報種類" disabled value={item.reason} />
