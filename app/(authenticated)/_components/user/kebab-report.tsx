@@ -13,7 +13,7 @@ import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { IconBell, IconDotsVertical, IconPhone } from '@tabler/icons-react'
 
-export function KebabReport({ nickname, id }: { nickname: string; id: number }) {
+export function KebabReport({ nickname, id }: { nickname: string; id: string }) {
   const [opened, { open, close }] = useDisclosure(false)
   const handleReport = (values: typeof form.values) => {
     console.log(values)
