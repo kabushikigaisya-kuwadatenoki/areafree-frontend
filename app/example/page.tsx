@@ -1,6 +1,6 @@
 'use client'
 
-import { SearchBar } from '@/app/_components/ui/common/search-form'
+import { SearchForm } from '@/app/_components/ui/common/search-form'
 import { ExampleCard, HogeCard } from '@/app/example/_components'
 import { Button, Card, Menu, Progress, Rating, Text, TextInput, Title, rem } from '@mantine/core'
 import { useForm } from '@mantine/form'
@@ -25,7 +25,7 @@ export default function Page() {
   })
   return (
     <>
-      <SearchBar />
+      <SearchForm />
       <p className="text-red">aaa</p>
       <ExampleCard title="テストです。" />
       <HogeCard title="テストです。" />
