@@ -1,27 +1,55 @@
 'use client'
-import { Box, Button, Paper, Text, TextInput, Textarea } from '@mantine/core'
+import { apiRequestWithRefresh } from '@/app/_functions/refresh-token'
+import { Box, Button, Group, Notification, Paper, Text, TextInput, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import Cookies from "js-cookie"
 import Link from 'next/link'
+import { useRouter } from "next/navigation"
 
 export function GuideRegisterForm() {
   const form = useForm({
     initialValues: {
-      guideArea: '',
+      guide_area: '',
       comment: '',
       introduction: '',
       plan: '',
     },
 
     validate: {
-      guideArea: (value) => (value.length > 0 ? 'ガイド地域を入力してください' : null),
-      comment: (value) => (value.length > 0 ? 'コメントを入力してください' : null),
-      introduction: (value) => (value.length > 0 ? '紹介文を入力してください' : null),
+      guide_area: (value) => (value ? null : 'ガイド地域を入力してください'),
+      comment: (value) => (value ? null : 'コメントを入力してください'),
+      introduction: (value) => (value ? null : '紹介文を入力してください'),
     },
   })
 
-  const handleSubmit = () => {
-    console.log('submit')
-  }
+  // const router = useRouter();
+
+  const handleSubmit = async () => {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/create/`
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(form.values),
+    };
+    try {
+      const response = await apiRequestWithRefresh(endpoint, options);
+
+      if (!response.ok) {
+        throw new Error('ガイド情報の登録に失敗しました。');
+      }
+      // const data = await response.json();
+      // router.push(`/guides/${data.id}`);
+
+    } catch (error: any) {
+      return (
+        <Notification>
+          {error.message}
+        </Notification>
+      );
+    }
+  };
   return (
     <>
       <Box maw={290} mx="auto">
@@ -34,9 +62,9 @@ export function GuideRegisterForm() {
               label="ガイド地域"
               placeholder="地域"
               required
-              value={form.values.guideArea}
-              onChange={(event) => form.setFieldValue('guideArea', event.currentTarget.value)}
-              error={form.errors.guideArea}
+              value={form.values.guide_area}
+              onChange={(event) => form.setFieldValue('guide_area', event.currentTarget.value)}
+              error={form.errors.guide_area}
             />
             <TextInput
               label="コメント"
@@ -55,10 +83,14 @@ export function GuideRegisterForm() {
               onChange={(event) => form.setFieldValue('comment', event.currentTarget.value)}
               error={form.errors.comment}
             />
-            <Button variant="outline" component={Link} href="/register/complete">
-              戻る
-            </Button>
-            <Button type="submit">次へ</Button>
+            <Text>
+            </Text>
+            <Group justify='center' mt={10}>
+              <Button variant="outline" component={Link} href="/register/complete">
+                戻る
+              </Button>
+              <Button type="submit">次へ</Button>
+            </Group>
           </form>
         </Paper>
       </Box>
