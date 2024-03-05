@@ -1,4 +1,4 @@
-import { Flex, Paper } from "@mantine/core";
+import { Paper } from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
 
