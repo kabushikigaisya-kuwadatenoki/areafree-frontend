@@ -23,16 +23,16 @@ import { useState } from 'react'
 
 type Props = {
   initialValues?: {
-    profileImage?: string
-    firstName?: string
-    firstNameKana?: string
-    lastName?: string
-    lastNameKana?: string
+    profile_image?: string
+    first_name?: string
+    first_name_kana?: string
+    last_name?: string
+    last_name_kana?: string
     nickname?: string
     gender?: string
     birthday?: string
-    availableLanguages?: string[]
-    phoneNumber?: string
+    available_languages?: string[]
+    phone_number?: string
     email?: string
     password?: string
     confirmPassword?: string
@@ -49,16 +49,16 @@ export function UserProfileForm({ initialValues }: Props) {
   const [opened, { open, close }] = useDisclosure(false)
 
   const defaultValues = {
-    profileImage: '',
-    firstName: '',
-    firstNameKana: '',
-    lastName: '',
-    lastNameKana: '',
+    profile_image: '',
+    first_name: '',
+    first_name_kana: '',
+    last_name: '',
+    last_name_kana: '',
     nickname: '',
     gender: '',
     birthday: '',
-    availableLanguages: [''],
-    phoneNumber: '',
+    available_languages: [''],
+    phone_number: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -68,19 +68,19 @@ export function UserProfileForm({ initialValues }: Props) {
     initialValues: initialValues || defaultValues,
 
     validate: {
-      lastName: (value = '') =>
+      last_name: (value = '') =>
         value.trim().length < 1 || value.trim().length > 50
           ? '姓を1〜50文字で入力してください'
           : null,
-      lastNameKana: (value = '') =>
+      last_name_kana: (value = '') =>
         !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
           ? '姓（カナ）は全角カナで1〜50文字で入力してください'
           : null,
-      firstName: (value = '') =>
+      first_name: (value = '') =>
         value.trim().length < 1 || value.trim().length > 50
           ? '名を1〜50文字で入力してください'
           : null,
-      firstNameKana: (value = '') =>
+      first_name_kana: (value = '') =>
         !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
           ? '名（カナ）は全角カナで1〜50文字で入力してください'
           : null,
@@ -91,11 +91,11 @@ export function UserProfileForm({ initialValues }: Props) {
       gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
       birthday: (value = '') =>
         !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
-      availableLanguages: (value: string[] = []) =>
+      available_languages: (value: string[] = []) =>
         value.some((lang) => lang === '未選択' || lang === '')
           ? '対応可能言語を選択してください'
           : null,
-      phoneNumber: (value = '') =>
+      phone_number: (value = '') =>
         !value.match(/^\d{10,11}$/) ? '電話番号を10〜11桁の数字で入力してください' : null,
       email: (value = '') =>
         !/^\S+@\S+\.\S+$/.test(value) ? '有効なメールアドレスを入力してください' : null,
@@ -113,7 +113,7 @@ export function UserProfileForm({ initialValues }: Props) {
     const file = event.target.files?.[0] // オプショナルチェーンを使用してfilesへアクセス
 
     if (file) {
-      form.setFieldValue('profileImage', URL.createObjectURL(file))
+      form.setFieldValue('profile_image', URL.createObjectURL(file))
     }
   }
 
@@ -129,9 +129,9 @@ export function UserProfileForm({ initialValues }: Props) {
     )
     setLanguageInputs(updatedLanguageInputs)
 
-    // languageInputsを更新した後で、フォームのavailableLanguagesフィールドを更新
-    const updatedAvailableLanguages = updatedLanguageInputs.map((input) => input.value)
-    form.setFieldValue('availableLanguages', updatedAvailableLanguages)
+    // languageInputsを更新した後で、フォームのavailable_languagesフィールドを更新
+    const updatedavailable_languages = updatedLanguageInputs.map((input) => input.value)
+    form.setFieldValue('available_languages', updatedavailable_languages)
   }
 
   const handleScrollToTop = () => {
@@ -174,7 +174,7 @@ export function UserProfileForm({ initialValues }: Props) {
             />
             <label htmlFor="imageUpload">
               <Image
-                src={form.values.profileImage || ProfileUpload}
+                src={form.values.profile_image || ProfileUpload}
                 width="96"
                 height="96"
                 alt="プロフィール画像アップロードボタン"
@@ -183,7 +183,7 @@ export function UserProfileForm({ initialValues }: Props) {
             </label>
             <TextInput
               label="姓"
-              {...form.getInputProps('lastName')}
+              {...form.getInputProps('last_name')}
               mt="1rem"
               placeholder="姓"
               disabled={registerStatus === 'confirm'}
@@ -192,7 +192,7 @@ export function UserProfileForm({ initialValues }: Props) {
             />
             <TextInput
               label="姓（カナ）"
-              {...form.getInputProps('lastNameKana')}
+              {...form.getInputProps('last_name_kana')}
               mt="1rem"
               placeholder="セイ"
               disabled={registerStatus === 'confirm'}
@@ -201,7 +201,7 @@ export function UserProfileForm({ initialValues }: Props) {
             />
             <TextInput
               label="名"
-              {...form.getInputProps('firstName')}
+              {...form.getInputProps('first_name')}
               mt="1rem"
               placeholder="名"
               disabled={registerStatus === 'confirm'}
@@ -210,7 +210,7 @@ export function UserProfileForm({ initialValues }: Props) {
             />
             <TextInput
               label="名（カナ）"
-              {...form.getInputProps('firstNameKana')}
+              {...form.getInputProps('first_name_kana')}
               mt="1rem"
               placeholder="メイ"
               disabled={registerStatus === 'confirm'}
@@ -259,9 +259,9 @@ export function UserProfileForm({ initialValues }: Props) {
               </>
             ))}
             <>
-              {form.errors.availableLanguages && (
+              {form.errors.available_languages && (
                 <Text c="red" size="xs" mt={5}>
-                  {form.errors.availableLanguages}
+                  {form.errors.available_languages}
                 </Text>
               )}
               <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
@@ -270,7 +270,7 @@ export function UserProfileForm({ initialValues }: Props) {
             </>
             <TextInput
               label="電話番号"
-              {...form.getInputProps('phoneNumber')}
+              {...form.getInputProps('phone_number')}
               mt="1rem"
               placeholder="1234567890"
               disabled={registerStatus === 'confirm'}
@@ -305,20 +305,7 @@ export function UserProfileForm({ initialValues }: Props) {
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <Group justify="center" mt="md">
-              <Button type="submit">確認</Button>
-              <>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setRegisterStatus('register')
-                    handleScrollToTop()
-                  }}
-                >
-                  修正
-                </Button>
-                <Button type="submit">登録</Button>
-              </>
-              {pathname === '/profile' && <Button type="submit">保存</Button>}
+              <Button type="submit">保存</Button>
             </Group>
           </form>
         </Paper>

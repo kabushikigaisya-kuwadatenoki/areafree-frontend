@@ -48,6 +48,7 @@ const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
 
 const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) => {
   const guides = await fetchGuideIndex(searchParams);
+  console.log(guides)
   return (
     <>
       <Paper bg="#CDE8E2" p="xs">

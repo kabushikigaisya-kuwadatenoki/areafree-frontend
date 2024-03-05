@@ -6,39 +6,18 @@ import {
   NativeSelect,
   Paper,
   PasswordInput,
-  Stack,
   Text,
   TextInput,
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useWindowScroll } from '@mantine/hooks'
 import Image from 'next/image'
-import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { useState } from 'react'
 
-// 色については後々テーマで設定します。
 
-type Props = {
-  initialValues?: {
-    profileImage?: string
-    firstName?: string
-    firstNameKana?: string
-    lastName?: string
-    lastNameKana?: string
-    nickname?: string
-    gender?: string
-    birthday?: string
-    availableLanguages?: string[]
-    phoneNumber?: string
-    email?: string
-    password?: string
-    confirmPassword?: string
-  }
-}
-
-export function UserRegisterForm({ initialValues }: Props) {
+export function UserRegisterForm() {
   const ProfileUpload = '/profileUpload.svg'
   const [registerStatus, setRegisterStatus] = useState('register')
   const [languageInputs, setLanguageInputs] = useState([{ id: Math.random(), value: '' }])
@@ -48,37 +27,37 @@ export function UserRegisterForm({ initialValues }: Props) {
 
   const defaultValues = {
     profileImage: '',
-    firstName: '',
-    firstNameKana: '',
-    lastName: '',
-    lastNameKana: '',
+    first_name: '',
+    first_name_kana: '',
+    last_name: '',
+    last_name_kana: '',
     nickname: '',
     gender: '',
     birthday: '',
-    availableLanguages: [''],
-    phoneNumber: '',
+    available_languages: [''],
+    phone_number: '',
     email: '',
     password: '',
     confirmPassword: '',
   }
 
   const form = useForm({
-    initialValues: initialValues || defaultValues,
+    initialValues: defaultValues,
 
     validate: {
-      lastName: (value = '') =>
+      last_name: (value = '') =>
         value.trim().length < 1 || value.trim().length > 50
           ? '姓を1〜50文字で入力してください'
           : null,
-      lastNameKana: (value = '') =>
+      last_name_kana: (value = '') =>
         !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
           ? '姓（カナ）は全角カナで1〜50文字で入力してください'
           : null,
-      firstName: (value = '') =>
+      first_name: (value = '') =>
         value.trim().length < 1 || value.trim().length > 50
           ? '名を1〜50文字で入力してください'
           : null,
-      firstNameKana: (value = '') =>
+      first_name_kana: (value = '') =>
         !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
           ? '名（カナ）は全角カナで1〜50文字で入力してください'
           : null,
@@ -89,11 +68,11 @@ export function UserRegisterForm({ initialValues }: Props) {
       gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
       birthday: (value = '') =>
         !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
-      availableLanguages: (value: string[] = []) =>
+      available_languages: (value: string[] = []) =>
         value.some((lang) => lang === '未選択' || lang === '')
           ? '対応可能言語を選択してください'
           : null,
-      phoneNumber: (value = '') =>
+      phone_number: (value = '') =>
         !value.match(/^\d{10,11}$/) ? '電話番号を10〜11桁の数字で入力してください' : null,
       email: (value = '') =>
         !/^\S+@\S+\.\S+$/.test(value) ? '有効なメールアドレスを入力してください' : null,
@@ -127,9 +106,9 @@ export function UserRegisterForm({ initialValues }: Props) {
     )
     setLanguageInputs(updatedLanguageInputs)
 
-    // languageInputsを更新した後で、フォームのavailableLanguagesフィールドを更新
-    const updatedAvailableLanguages = updatedLanguageInputs.map((input) => input.value)
-    form.setFieldValue('availableLanguages', updatedAvailableLanguages)
+    // languageInputsを更新した後で、フォームのavailable_languagesフィールドを更新
+    const updatedavailable_languages = updatedLanguageInputs.map((input) => input.value)
+    form.setFieldValue('available_languages', updatedavailable_languages)
   }
 
   const handleScrollToTop = () => {
@@ -137,11 +116,26 @@ export function UserRegisterForm({ initialValues }: Props) {
   }
 
   async function handleSubmit() {
+
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/register/`
+    try {
+      await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...form.values
+        }),
+      })
+    } catch (error) {
+      console.error(error)
+    }
     if (registerStatus === 'register') {
       setRegisterStatus('confirm')
       handleScrollToTop()
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    console.log({ ...form.values })
     router.push('/register/temporary')
   }
   return (
@@ -177,7 +171,7 @@ export function UserRegisterForm({ initialValues }: Props) {
             </label>
             <TextInput
               label="姓"
-              {...form.getInputProps('lastName')}
+              {...form.getInputProps('last_name')}
               mt="1rem"
               placeholder="姓"
               disabled={registerStatus === 'confirm'}
@@ -186,7 +180,7 @@ export function UserRegisterForm({ initialValues }: Props) {
             />
             <TextInput
               label="姓（カナ）"
-              {...form.getInputProps('lastNameKana')}
+              {...form.getInputProps('last_name_kana')}
               mt="1rem"
               placeholder="セイ"
               disabled={registerStatus === 'confirm'}
@@ -195,7 +189,7 @@ export function UserRegisterForm({ initialValues }: Props) {
             />
             <TextInput
               label="名"
-              {...form.getInputProps('firstName')}
+              {...form.getInputProps('first_name')}
               mt="1rem"
               placeholder="名"
               disabled={registerStatus === 'confirm'}
@@ -204,7 +198,7 @@ export function UserRegisterForm({ initialValues }: Props) {
             />
             <TextInput
               label="名（カナ）"
-              {...form.getInputProps('firstNameKana')}
+              {...form.getInputProps('first_name_kana')}
               mt="1rem"
               placeholder="メイ"
               disabled={registerStatus === 'confirm'}
@@ -254,9 +248,9 @@ export function UserRegisterForm({ initialValues }: Props) {
             ))}
             {registerStatus !== 'confirm' && (
               <>
-                {form.errors.availableLanguages && (
+                {form.errors.available_languages && (
                   <Text c="red" size="xs" mt={5}>
-                    {form.errors.availableLanguages}
+                    {form.errors.available_languages}
                   </Text>
                 )}
                 <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
@@ -267,7 +261,7 @@ export function UserRegisterForm({ initialValues }: Props) {
             {/* このテキストをクリックすると対応可能言語のNativeSelectが増える */}
             <TextInput
               label="電話番号"
-              {...form.getInputProps('phoneNumber')}
+              {...form.getInputProps('phone_number')}
               mt="1rem"
               placeholder="1234567890"
               disabled={registerStatus === 'confirm'}
@@ -301,11 +295,12 @@ export function UserRegisterForm({ initialValues }: Props) {
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
+            <Text>{registerStatus}</Text>
             <Group justify="center" mt="md">
-              {registerStatus !== 'confirm' && pathname !== '/profile' && (
-                <Button type="submit">確認</Button>
+              {registerStatus !== 'confirm' && (
+                <Button disabled={form.values.confirmPassword === ""} onClick={() => setRegisterStatus("confirm")}>確認</Button>
               )}
-              {registerStatus !== 'register' && pathname !== '/profile' && (
+              {registerStatus !== 'register' && (
                 <>
                   <Button
                     variant="outline"
@@ -323,28 +318,6 @@ export function UserRegisterForm({ initialValues }: Props) {
             </Group>
           </form>
         </Paper>
-        {pathname === '/profile' && (
-          <>
-            <Group justify="flex-end">
-              <Stack>
-                <Text size="xs" c="red" component={Link} href="/">
-                  パスワードを変更する
-                </Text>
-                <Text size="xs" c="red" component={Link} href="/">
-                  ブロックしているユーザー
-                </Text>
-              </Stack>
-            </Group>
-            <Group justify="flex-end" my="2rem">
-              <Button component={Link} href="/guide/register">
-                ガイド登録
-              </Button>
-              <Button component={Link} href="/" color="red" variant="outline">
-                退会
-              </Button>
-            </Group>
-          </>
-        )}
       </Box>
     </>
   )

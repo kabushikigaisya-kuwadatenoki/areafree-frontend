@@ -1,24 +1,16 @@
 'use client'
 import { ComponentWrapper } from '@/app/_components/ui/common/component-wrapper'
-import { Button, Checkbox, Group, Text, TextInput } from '@mantine/core'
+import { Button, Checkbox, Group, PasswordInput, Text, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import axios, { AxiosError } from 'axios'
+import Cookies from "js-cookie"
 import Link from 'next/link'
+import { useRouter } from "next/navigation"
 import { useState } from 'react'
 
-type LoginFormProps = {
-  email: string
-  password: string
-}
-
-type ErrorResponse = {
-  message: string // エラーメッセージを含む
-  statusCode?: number // HTTPステータスコード（オプショナル）
-  errorCode?: string // アプリケーション固有のエラーコード（オプショナル）
-}
 
 export function LoginForm() {
   const [confirmed, setConfirmed] = useState(false)
+  const router = useRouter()
   const form = useForm({
     initialValues: {
       email: '',
@@ -32,15 +24,32 @@ export function LoginForm() {
           : null,
     },
   })
-  const handleSubmit = async (values: LoginFormProps) => {
+  const handleSubmit = async () => {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/login/`
     try {
-      const response = await axios.post('/api/login', values)
-      console.log(response.data)
-    } catch (error) {
-      const err = error as AxiosError<ErrorResponse>
-      if (err.response?.data) {
-        console.error(err.response.data)
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...form.values
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
       }
+      console.log(form.values)
+      const data = await response.json();
+      Cookies.set('accessToken', data.access, { expires: 2 });
+      Cookies.set('refreshToken', data.refresh, { expires: 7 });
+      const userId = data.user_id;
+
+      router.push(`/user/${userId}`)
+
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -61,7 +70,7 @@ export function LoginForm() {
             {form.errors.email}
           </Text>
         )}
-        <TextInput
+        <PasswordInput
           label="パスワード"
           placeholder="Your password"
           {...form.getInputProps('password')}
