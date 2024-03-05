@@ -15,7 +15,7 @@ export default function Page() {
     },
   ]
   const items = faq.map((item) => (
-    <Paper p="md" shadow="md" maw={290} mx="auto" my={10}>
+    <Paper p="md" shadow="md" maw={290} mx="auto" my={10} key={item.question}>
       <Accordion.Item key={item.question} value={item.question}>
         <Accordion.Control chevron={<IconChevronDown color="#33947D" />}>
           <Group justify="flex-start" gap={10} align="center">

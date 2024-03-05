@@ -3,7 +3,7 @@ import { Button, Group, Modal, Rating, Text, TextInput, Textarea } from '@mantin
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 
-export function EvaluationModal({ nickname, id }: { nickname: string; id: number }) {
+export function EvaluationModal({ nickname, id }: { nickname: string; id: string }) {
   const [opened, { open, close }] = useDisclosure(false)
   const handleSubmit = (values: typeof form.values) => {
     console.log(values)
