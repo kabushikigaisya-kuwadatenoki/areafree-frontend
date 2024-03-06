@@ -7,7 +7,7 @@ import { Stack } from '@mantine/core'
 
 export default async function Page({ params }: { params: { guide_id: string } }) {
   const fetchGuideDetail = async (guide_id: string) => {
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`;
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/detail/${guide_id}/`;
 
     try {
       const response = await fetch(endpoint, {
@@ -25,26 +25,15 @@ export default async function Page({ params }: { params: { guide_id: string } })
       return {};
     }
   };
-  const guide_dummy = {
-    id: "1",
-    nickname: 'ニックネーム太郎',
-    evaluation: 3.7,
-    created_at: '2024-02-22T15:00:00Z',
-    available_languages: ['English', 'Japanese'],
-    comment: 'Very knowledgeable and friendly guide!',
-    is_favorite: true,
-    profile_image: '/prof-dummy.png',
-    address: '東京都新宿区',
-  }
 
   const guide = await fetchGuideDetail(params.guide_id)
   console.log(guide)
   return (
     <>
-      <EvaluationModal nickname={guide_dummy.nickname} id={guide_dummy.id} />
+      <EvaluationModal nickname={guide.guide_nickname} guideId={guide.id} />
       <Stack justify="center" align="center" gap={0} mt="sm">
-        <GuideCardDetail guides={guide_dummy} />
-        <KebabReport nickname={guide_dummy.nickname} id={params.guide_id} />
+        <GuideCardDetail guides={guide} />
+        <KebabReport nickname={guide.guide_nickname} guideId={guide.id} />
       </Stack>
     </>
   )
