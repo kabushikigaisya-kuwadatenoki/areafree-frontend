@@ -1,6 +1,32 @@
 import { BreadBrumbs } from '@/app/_components/ui/common/bread-crumbs'
 import { BlockedGuideCard } from './_components/blocked-guide-card'
-export default function Page({ params }: { params: { id: number } }) {
+
+
+export default async function Page() {
+  const fetchBlockedGuide = async () => {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/`
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    try {
+      const response = await fetch(endpoint, options);
+      if (!response.ok) {
+        throw new Error(`An error occurred: ${response.statusText}`);
+      }
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Fetching guide index failed:', error);
+      return {};
+    }
+  }
+
+  const bloked_guide = await fetchBlockedGuide()
+
+  console.log(bloked_guide)
   const guide_dummy = [
     {
       id: 1,
