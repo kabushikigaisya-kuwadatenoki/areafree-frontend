@@ -1,7 +1,8 @@
 'use client'
 import { apiRequestWithRefresh } from '@/app/_functions/refresh-token'
-import { Box, Button, Group, Notification, Paper, Text, TextInput, Textarea } from '@mantine/core'
+import { Box, Button, Group, Paper, Text, TextInput, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 
 export function GuideRegisterForm() {
@@ -10,7 +11,6 @@ export function GuideRegisterForm() {
       guide_area: '',
       comment: '',
       introduction: '',
-      plan: '',
     },
 
     validate: {
@@ -23,27 +23,26 @@ export function GuideRegisterForm() {
   // const router = useRouter();
 
   const handleSubmit = async () => {
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/create/`
+    // 毎回undefinedになる。httponlyを外したい
+    const accessToken = Cookies.get('accessToken');
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/create/`;
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(form.values),
     };
     try {
-      const response = await apiRequestWithRefresh(endpoint, options);
+      const response = await fetch(endpoint, options);
 
       if (!response.ok) {
         throw new Error('ガイド情報の登録に失敗しました。');
       }
 
     } catch (error: any) {
-      return (
-        <Notification>
-          {error.message}
-        </Notification>
-      );
+      console.log(error.message)
     }
   };
   return (
