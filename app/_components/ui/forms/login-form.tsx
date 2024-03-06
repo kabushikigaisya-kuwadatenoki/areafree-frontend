@@ -40,7 +40,6 @@ export function LoginForm() {
       if (!response.ok) {
         throw new Error('Login failed');
       }
-      console.log(form.values)
       const data = await response.json();
       Cookies.set('accessToken', data.access, { expires: 2 });
       Cookies.set('refreshToken', data.refresh, { expires: 7 });
