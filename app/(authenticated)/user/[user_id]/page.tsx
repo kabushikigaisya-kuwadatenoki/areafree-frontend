@@ -27,7 +27,7 @@ type GuideIndexItemsProps = {
 
 const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
   const queryParams = new URLSearchParams(searchParams as any).toString();
-  const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides${queryParams ? `?${queryParams}` : ''}`;
+  const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides${queryParams ? `?${queryParams}` : '/'}`;
 
   try {
     const response = await fetch(endpoint, {
@@ -39,7 +39,10 @@ const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
     if (!response.ok) {
       throw new Error(`An error occurred: ${response.statusText}`);
     }
-    return await response.json();
+    const data = await response.json()
+    console.log(data)
+    console.log(endpoint)
+    return data
   } catch (error) {
     console.error('Fetching guide index failed:', error);
     return {};
@@ -48,7 +51,6 @@ const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
 
 const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) => {
   const guides = await fetchGuideIndex(searchParams);
-  console.log(guides)
   return (
     <>
       <Paper bg="#CDE8E2" p="xs">
@@ -61,6 +63,8 @@ const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) =
     </>
   );
 };
+
+
 const GuideSearchMap = () => {
   return (
     <>
