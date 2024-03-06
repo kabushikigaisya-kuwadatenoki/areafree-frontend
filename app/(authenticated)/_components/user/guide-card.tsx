@@ -1,5 +1,5 @@
 'use client'
-import { formatDate } from '@/app/_functions/format-ate'
+import { formatDate } from '@/app/_functions/format-date'
 import { Box, Card, Group, Rating, Text } from '@mantine/core'
 import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
