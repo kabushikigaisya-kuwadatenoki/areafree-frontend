@@ -2,9 +2,7 @@
 import { apiRequestWithRefresh } from '@/app/_functions/refresh-token'
 import { Box, Button, Group, Notification, Paper, Text, TextInput, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import Cookies from "js-cookie"
 import Link from 'next/link'
-import { useRouter } from "next/navigation"
 
 export function GuideRegisterForm() {
   const form = useForm({
@@ -39,8 +37,6 @@ export function GuideRegisterForm() {
       if (!response.ok) {
         throw new Error('ガイド情報の登録に失敗しました。');
       }
-      // const data = await response.json();
-      // router.push(`/guides/${data.id}`);
 
     } catch (error: any) {
       return (
