@@ -1,25 +1,47 @@
 'use client'
+import { apiRequestWithRefresh } from '@/app/_functions/refresh-token'
 import { Button, Group, Modal, Rating, Text, TextInput, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
+import Cookies from 'js-cookie'
 
-export function EvaluationModal({ nickname, id }: { nickname: string; id: string }) {
+export function EvaluationModal({ nickname, guideId }: { nickname: string; guideId: string }) {
   const [opened, { open, close }] = useDisclosure(false)
-  const handleSubmit = (values: typeof form.values) => {
-    console.log(values)
-    close()
-  }
   const form = useForm({
     initialValues: {
-      id: id,
-      nickname: nickname,
       evaluation: 0,
-      Comment: '',
+      comment: '',
     },
     validate: {
       evaluation: (value) => (value > 0 ? null : '評価は必須です'),
     },
   })
+
+  const handleSubmit = async () => {
+    try {
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reviews/`
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('accessToken')}`,
+        },
+        body: JSON.stringify({ ...form.values, guide: guideId }),
+      }
+
+      const response = await apiRequestWithRefresh(endpoint, options)
+
+      if (response.ok) {
+        close() // モーダルを閉じる
+      } else {
+        // エラーレスポンスの処理
+        const errorData = await response.json()
+        console.error('Review submission failed:', errorData)
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  }
   return (
     <>
       <Button
@@ -35,7 +57,7 @@ export function EvaluationModal({ nickname, id }: { nickname: string; id: string
       </Button>
       <Modal opened={opened} onClose={close} title="ガイド評価登録">
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <TextInput label="ガイド名" {...form.getInputProps('nickname')} disabled />
+          <TextInput label="ガイド名" value={nickname} disabled />
           <Group gap={0} mt="xs">
             <Text fw={100}>評価</Text>
             <Text c="red">*</Text>
