@@ -1,4 +1,5 @@
 'use client'
+import { apiRequestWithRefresh } from '@/app/_functions/refresh-token'
 import {
   ActionIcon,
   Button,
@@ -13,24 +14,61 @@ import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { IconBell, IconDotsVertical, IconPhone } from '@tabler/icons-react'
 
-export function KebabReport({ nickname, id }: { nickname: string; id: string }) {
+export function KebabReport({ guideId, nickname }: { guideId: string; nickname: string }) {
   const [opened, { open, close }] = useDisclosure(false)
-  const handleReport = (values: typeof form.values) => {
-    console.log(values)
-  }
+
   const form = useForm({
     initialValues: {
-      id: id,
-      nickname: nickname,
       reason: '',
-      comment: '',
+      report_comment: '',
     },
   })
+
+  const handleReport = async () => {
+    try {
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reports/`
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ ...form.values, guide: guideId }),
+      }
+      const response = await apiRequestWithRefresh(endpoint, options)
+
+      if (response.ok) {
+        close()
+      }
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
+
+  const handleBlock = async () => {
+    try {
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/`
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ guide: guideId }),
+      }
+      const response = await apiRequestWithRefresh(endpoint, options)
+      console.log("clicked")
+      if (response.ok) {
+        close()
+      }
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <>
       <Modal opened={opened} onClose={close} title="通報">
         <form onSubmit={form.onSubmit(handleReport)}>
-          <TextInput label="通報対象者" {...form.getInputProps('nickname')} disabled />
+          <TextInput label="通報対象者" value={nickname} disabled />
           <NativeSelect
             label="通報理由"
             {...form.getInputProps('reason')}
@@ -52,7 +90,7 @@ export function KebabReport({ nickname, id }: { nickname: string; id: string }) 
             withAsterisk
             required
           />
-          <Textarea label="コメント" {...form.getInputProps('comment')} autosize minRows={5} />
+          <Textarea label="コメント" {...form.getInputProps('report_comment')} autosize minRows={5} />
           <Group justify="flex-end" mt={16}>
             <Button onClick={close} variant="outline">
               閉じる
@@ -92,7 +130,7 @@ export function KebabReport({ nickname, id }: { nickname: string; id: string }) 
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item>ブロック</Menu.Item>
+            <Menu.Item onClick={handleBlock}>ブロック</Menu.Item>
             <Menu.Item color="red" fw={700} onClick={open}>
               通報
             </Menu.Item>
