@@ -39,10 +39,7 @@ const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
     if (!response.ok) {
       throw new Error(`An error occurred: ${response.statusText}`);
     }
-    const data = await response.json()
-    console.log(data)
-    console.log(endpoint)
-    return data
+    return await response.json();
   } catch (error) {
     console.error('Fetching guide index failed:', error);
     return {};
