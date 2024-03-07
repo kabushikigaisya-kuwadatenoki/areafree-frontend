@@ -1,12 +1,13 @@
 'use client'
 import {
+  Alert,
   Box,
   Button,
+  Checkbox,
   Group,
   Modal,
   NativeSelect,
   Paper,
-  PasswordInput,
   Stack,
   Text,
   TextInput
@@ -14,9 +15,9 @@ import {
 import { useForm } from '@mantine/form'
 import { useWindowScroll } from '@mantine/hooks'
 import { useDisclosure } from "@mantine/hooks"
+import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { useState } from 'react'
 // 色については後々テーマで設定します。
@@ -36,17 +37,17 @@ type Props = {
     email?: string
     password?: string
     confirmPassword?: string
-  }
+    is_guide?: boolean
+  },
+  user_id: string
 }
 
-export function UserProfileForm({ initialValues }: Props) {
+export function UserProfileForm({ initialValues, user_id }: Props) {
   const ProfileUpload = '/profileUpload.svg'
   const [registerStatus, setRegisterStatus] = useState('register')
-  const [languageInputs, setLanguageInputs] = useState([{ id: Math.random(), value: '' }])
-  const [scroll, scrollTo] = useWindowScroll()
-  const router = useRouter()
-  const pathname = usePathname()
   const [opened, { open, close }] = useDisclosure(false)
+  const [completeUpdate, setCompleteUpdate] = useState("")
+  const [scroll, scrollTo] = useWindowScroll()
 
   const defaultValues = {
     profile_image: '',
@@ -91,20 +92,14 @@ export function UserProfileForm({ initialValues }: Props) {
       gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
       birthday: (value = '') =>
         !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
-      available_languages: (value: string[] = []) =>
-        value.some((lang) => lang === '未選択' || lang === '')
-          ? '対応可能言語を選択してください'
-          : null,
       phone_number: (value = '') =>
         !value.match(/^\d{10,11}$/) ? '電話番号を10〜11桁の数字で入力してください' : null,
       email: (value = '') =>
         !/^\S+@\S+\.\S+$/.test(value) ? '有効なメールアドレスを入力してください' : null,
-      password: (value = '') =>
-        value.length < 8 || !/\d/.test(value) || !/[a-zA-Z]/.test(value)
-          ? 'パスワードは8文字以上で、数字と英字を含む必要があります'
+      available_languages: (value: string[] = []) =>
+        value.some((lang) => lang === '未選択' || lang === '')
+          ? '対応可能言語を選択してください'
           : null,
-      confirmPassword: (value, values) =>
-        value !== values.password ? 'パスワードと確認用パスワードが一致しません' : null,
     },
   })
 
@@ -117,37 +112,60 @@ export function UserProfileForm({ initialValues }: Props) {
     }
   }
 
-  // 言語選択の追加ハンドラ
-  const addLanguageInput = () => {
-    setLanguageInputs([...languageInputs, { id: Math.random(), value: '' }])
-  }
-
-  // 言語選択の変更ハンドラ
-  const handleLanguageChange = (id: number, value: string) => {
-    const updatedLanguageInputs = languageInputs.map((input) =>
-      input.id === id ? { ...input, value: value } : input,
-    )
-    setLanguageInputs(updatedLanguageInputs)
-
-    // languageInputsを更新した後で、フォームのavailable_languagesフィールドを更新
-    const updatedavailable_languages = updatedLanguageInputs.map((input) => input.value)
-    form.setFieldValue('available_languages', updatedavailable_languages)
-  }
-
   const handleScrollToTop = () => {
     scrollTo({ y: 0 })
   }
 
-  async function handleSubmit() {
-    if (registerStatus === 'register') {
-      setRegisterStatus('confirm')
-      handleScrollToTop()
+  const languages = ['Japanese', 'Korean', 'English', 'Chinese'];
+
+  // Checkboxの状態を更新するハンドラ
+  const handleLanguageChange = (language: string, checked: boolean) => {
+    let updatedLanguages = form.values.available_languages;
+
+    if (checked) {
+      // 言語を追加
+      updatedLanguages = [...(updatedLanguages || []), language];
+    } else {
+      // 言語を削除
+      updatedLanguages = (updatedLanguages || []).filter((lang) => lang !== language);
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    router.push('/register/temporary')
+
+    form.setFieldValue('available_languages', updatedLanguages);
+  };
+
+  const accessToken = Cookies.get("accessToken");
+  async function handleSubmit() {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`
+    try {
+      const response = await fetch(endpoint, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(form.values)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data)
+      }
+
+      setCompleteUpdate("complete")
+      handleScrollToTop()
+    } catch (error: any) {
+      console.error(error.message)
+      throw new Error(error.message)
+    }
   }
   return (
     <>
+      {completeUpdate && (
+        <Alert variant='lite' color='blue' withCloseButton onClose={() => { setCompleteUpdate("") }}>
+          ユーザー情報を更新しました
+        </Alert>
+      )}
       <Modal opened={opened} onClose={close} title="退会する">
         <Paper withBorder p={10} >
           <Group justify='center'>
@@ -243,31 +261,16 @@ export function UserProfileForm({ initialValues }: Props) {
               disabled={registerStatus === 'confirm'}
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
-            {languageInputs.map((input, index) => (
-              <>
-                <NativeSelect
-                  key={input.id}
-                  label={`対応可能言語 ${index + 1}`}
-                  value={input.value}
-                  onChange={(event) => handleLanguageChange(input.id, event.currentTarget.value)}
-                  data={['未選択', 'Japanese', 'Korean', 'English', 'Chinese']}
-                  mt="1rem"
-                  disabled={registerStatus === 'confirm'}
-                  withAsterisk
-                  styles={{ input: { opacity: '1', color: '#555' } }}
+            <Group justify="column" gap="xs" mt={16}>
+              {languages.map((language) => (
+                <Checkbox
+                  key={language}
+                  label={language}
+                  checked={form.values.available_languages?.includes(language) || false}
+                  onChange={(event) => handleLanguageChange(language, event.currentTarget.checked)}
                 />
-              </>
-            ))}
-            <>
-              {form.errors.available_languages && (
-                <Text c="red" size="xs" mt={5}>
-                  {form.errors.available_languages}
-                </Text>
-              )}
-              <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
-                ＋対応可能言語を追加
-              </Text>
-            </>
+              ))}
+            </Group>
             <TextInput
               label="電話番号"
               {...form.getInputProps('phone_number')}
@@ -282,24 +285,6 @@ export function UserProfileForm({ initialValues }: Props) {
               {...form.getInputProps('email')}
               mt="1rem"
               placeholder="example@example.com"
-              disabled={registerStatus === 'confirm'}
-              withAsterisk
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
-            <PasswordInput
-              label="パスワード"
-              {...form.getInputProps('password')}
-              mt="1rem"
-              placeholder="xxxxxxxx"
-              disabled={registerStatus === 'confirm'}
-              withAsterisk
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
-            <PasswordInput
-              label="パスワード（確認用）"
-              {...form.getInputProps('confirmPassword')}
-              mt="1rem"
-              placeholder="xxxxxxxx"
               disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
@@ -321,9 +306,15 @@ export function UserProfileForm({ initialValues }: Props) {
             </Stack>
           </Group>
           <Group justify="flex-end" my="2rem">
-            <Button component={Link} href="/guide/register">
-              ガイド登録
-            </Button>
+            {initialValues?.is_guide ? (
+              <Button component={Link} href={`/guide/${initialValues.is_guide}`}>
+                ガイドプロフィールへ
+              </Button>
+            ) : (
+              <Button component={Link} href="/guide/register">
+                ガイド登録
+              </Button>
+            )}
             <Button onClick={open} bg="red" variant="fill">
               退会
             </Button>

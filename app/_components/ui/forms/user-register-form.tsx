@@ -21,6 +21,7 @@ export function UserRegisterForm() {
   const ProfileUpload = '/profileUpload.svg'
   const [registerStatus, setRegisterStatus] = useState('register')
   const [languageInputs, setLanguageInputs] = useState([{ id: Math.random(), value: '' }])
+  const [responseError, setResponseError] = useState("")
   const [scroll, scrollTo] = useWindowScroll()
   const router = useRouter()
   const pathname = usePathname()
@@ -116,27 +117,30 @@ export function UserRegisterForm() {
   }
 
   async function handleSubmit() {
-
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/register/`
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/register/`;
     try {
-      await fetch(endpoint, {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          ...form.values
-        }),
+        body: JSON.stringify(form.values),
       })
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // レスポンスからエラーメッセージを取得してセット
+        setResponseError(data.email ? data.email[0] : '登録に失敗しました。');
+        return;  // ここで処理を終了
+      }
+
+      // 成功時の処理（次のページへの遷移など）
+      router.push('/register/temporary');
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      setResponseError('登録中にエラーが発生しました。');
     }
-    if (registerStatus === 'register') {
-      setRegisterStatus('confirm')
-      handleScrollToTop()
-    }
-    console.log({ ...form.values })
-    router.push('/register/temporary')
   }
   return (
     <>
@@ -176,6 +180,7 @@ export function UserRegisterForm() {
               placeholder="姓"
               disabled={registerStatus === 'confirm'}
               withAsterisk
+              required
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
@@ -295,7 +300,7 @@ export function UserRegisterForm() {
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
-            <Text>{registerStatus}</Text>
+            <Text ta="center" c="red" size="11px" mt={12}>{responseError}</Text>
             <Group justify="center" mt="md">
               {registerStatus !== 'confirm' && (
                 <Button disabled={form.values.confirmPassword === ""} onClick={() => setRegisterStatus("confirm")}>確認</Button>
