@@ -1,11 +1,12 @@
 'use client'
-import { apiRequestWithRefresh } from '@/app/_functions/refresh-token'
-import { Box, Button, Group, Paper, Text, TextInput, Textarea } from '@mantine/core'
+import { Alert, Box, Button, Group, Paper, Text, TextInput, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import Cookies from 'js-cookie'
 import Link from 'next/link'
+import { useState } from "react"
 
 export function GuideRegisterForm() {
+  const [responseError, setResponseError] = useState("")
   const form = useForm({
     initialValues: {
       guide_area: '',
@@ -38,15 +39,22 @@ export function GuideRegisterForm() {
       const response = await fetch(endpoint, options);
 
       if (!response.ok) {
-        throw new Error('ガイド情報の登録に失敗しました。');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'ガイド情報の登録に失敗しました。');
       }
 
     } catch (error: any) {
-      console.log(error.message)
+      console.error(error.message);
+      setResponseError(error.message); // エラーメッセージを更新
     }
   };
   return (
     <>
+      {responseError && (
+        <Alert maw={350} mx="auto" mt={16} variant="filled" onClose={() => { setResponseError("") }} color="red" title="エラー" withCloseButton>
+          このユーザーはすでにガイド登録されています。
+        </Alert>
+      )}
       <Box maw={290} mx="auto">
         <Paper shadow="lg" p="1rem" my="2rem" radius="lg">
           <Text ta="center" size="xl" fw={700}>

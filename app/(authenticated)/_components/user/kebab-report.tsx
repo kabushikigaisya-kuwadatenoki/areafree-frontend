@@ -55,7 +55,6 @@ export function KebabReport({ guideId, nickname }: { guideId: string; nickname: 
         body: JSON.stringify({ guide: guideId }),
       }
       const response = await apiRequestWithRefresh(endpoint, options)
-      console.log("clicked")
       if (response.ok) {
         close()
       }

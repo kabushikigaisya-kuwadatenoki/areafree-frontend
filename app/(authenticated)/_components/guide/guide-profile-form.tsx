@@ -2,10 +2,10 @@
 import {
   Box,
   Button,
+  Checkbox,
   Group,
   NativeSelect,
   Paper,
-  PasswordInput,
   Stack,
   Text,
   TextInput,
@@ -13,9 +13,10 @@ import {
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useWindowScroll } from '@mantine/hooks'
+import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+
 import React from 'react'
 import { useState } from 'react'
 
@@ -23,213 +24,251 @@ import { useState } from 'react'
 
 type Props = {
   initialValues?: {
-    profileImage?: string
-    firstName?: string
-    firstNameKana?: string
-    lastName?: string
-    lastNameKana?: string
-    nickname?: string
-    gender?: string
-    birthday?: string
-    availableLanguages?: string[]
-    phoneNumber?: string
-    email?: string
-    password?: string
-    confirmPassword?: string
-    guideArea?: string
     comment?: string
     introduction?: string
-  }
+    profile_image?: string
+    guide_area?: string
+    support_status?: string
+    user_id?: string
+    // user_details: {
+    //   id?: string
+    //   first_name?: string
+    //   first_name_kana?: string
+    //   last_name?: string
+    //   last_name_kana?: string
+    //   nickname?: string
+    //   gender?: string
+    //   birthday?: string
+    //   phone_number?: string
+    //   email?: string
+    //   profile_image?: string
+    //   available_languages?: string[]
+    // }
+  },
+  guide_id: string
 }
 
-export function GuideProfileForm({ initialValues }: Props) {
-  const ProfileUpload = '/profileUpload.svg'
-  const [registerStatus, setRegisterStatus] = useState('register')
-  const [languageInputs, setLanguageInputs] = useState([{ id: Math.random(), value: '' }])
+export function GuideProfileForm({ initialValues, guide_id }: Props) {
   const [scroll, scrollTo] = useWindowScroll()
-  const router = useRouter()
-  const pathname = usePathname()
 
   const defaultValues = {
-    profileImage: '',
-    firstName: '',
-    firstNameKana: '',
-    lastName: '',
-    lastNameKana: '',
-    nickname: '',
-    gender: '',
-    birthday: '',
-    availableLanguages: [''],
-    phoneNumber: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    guideArea: '',
-    comment: '',
-    introduction: '',
-  }
+    support_status: initialValues?.support_status || '',
+    // profile_image: initialValues?.user_details?.profile_image || '',
+    // first_name: initialValues?.user_details?.first_name || '',
+    // first_name_kana: initialValues?.user_details?.first_name_kana || '',
+    // last_name: initialValues?.user_details?.last_name || '',
+    // last_name_kana: initialValues?.user_details?.last_name_kana || '',
+    // nickname: initialValues?.user_details?.nickname || '',
+    // gender: initialValues?.user_details?.gender || '',
+    // birthday: initialValues?.user_details?.birthday || '',
+    // phone_number: initialValues?.user_details?.phone_number || '',
+    // email: initialValues?.user_details?.email || '',
+    // available_languages: initialValues?.user_details?.available_languages || [],
+    guide_area: initialValues?.guide_area || '',
+    comment: initialValues?.comment || '',
+    introduction: initialValues?.introduction || '',
+  };
 
   const form = useForm({
-    initialValues: initialValues || defaultValues,
+    initialValues: defaultValues,
 
-    validate: {
-      lastName: (value = '') =>
-        value.trim().length < 1 || value.trim().length > 50
-          ? '姓を1〜50文字で入力してください'
-          : null,
-      lastNameKana: (value = '') =>
-        !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
-          ? '姓（カナ）は全角カナで1〜50文字で入力してください'
-          : null,
-      firstName: (value = '') =>
-        value.trim().length < 1 || value.trim().length > 50
-          ? '名を1〜50文字で入力してください'
-          : null,
-      firstNameKana: (value = '') =>
-        !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
-          ? '名（カナ）は全角カナで1〜50文字で入力してください'
-          : null,
-      nickname: (value = '') =>
-        value.trim().length < 1 || value.trim().length > 50
-          ? 'ニックネームを1〜50文字で入力してください'
-          : null,
-      gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
-      birthday: (value = '') =>
-        !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
-      availableLanguages: (value: string[] = []) =>
-        value.some((lang) => lang === '未選択' || lang === '')
-          ? '対応可能言語を選択してください'
-          : null,
-      phoneNumber: (value = '') =>
-        !value.match(/^\d{10,11}$/) ? '電話番号を10〜11桁の数字で入力してください' : null,
-      email: (value = '') =>
-        !/^\S+@\S+\.\S+$/.test(value) ? '有効なメールアドレスを入力してください' : null,
-      password: (value = '') =>
-        value.length < 8 || !/\d/.test(value) || !/[a-zA-Z]/.test(value)
-          ? 'パスワードは8文字以上で、数字と英字を含む必要があります'
-          : null,
-      confirmPassword: (value, values) =>
-        value !== values.password ? 'パスワードと確認用パスワードが一致しません' : null,
-    },
+    // validate: {
+    //   last_name: (value = '') =>
+    //     value.trim().length < 1 || value.trim().length > 50
+    //       ? '姓を1〜50文字で入力してください'
+    //       : null,
+    //   last_name_kana: (value = '') =>
+    //     !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
+    //       ? '姓（カナ）は全角カナで1〜50文字で入力してください'
+    //       : null,
+    //   first_name: (value = '') =>
+    //     value.trim().length < 1 || value.trim().length > 50
+    //       ? '名を1〜50文字で入力してください'
+    //       : null,
+    //   first_name_kana: (value = '') =>
+    //     !value.match(/^[\u30A0-\u30FF]+$/) || value.trim().length < 1 || value.trim().length > 50
+    //       ? '名（カナ）は全角カナで1〜50文字で入力してください'
+    //       : null,
+    //   nickname: (value = '') =>
+    //     value.trim().length < 1 || value.trim().length > 50
+    //       ? 'ニックネームを1〜50文字で入力してください'
+    //       : null,
+    //   gender: (value = '') => (!value || value === '未選択' ? '性別を選択してください' : null),
+    //   birthday: (value = '') =>
+    //     !value || new Date(value) >= new Date() ? '有効な生年月日を入力してください' : null,
+    //   available_languages: (value: string[] = []) =>
+    //     value.some((lang) => lang === '未選択' || lang === '')
+    //       ? '対応可能言語を選択してください'
+    //       : null,
+    //   phone_number: (value = '') =>
+    //     !value.match(/^\d{10,11}$/) ? '電話番号を10〜11桁の数字で入力してください' : null,
+    //   email: (value = '') =>
+    //     !/^\S+@\S+\.\S+$/.test(value) ? '有効なメールアドレスを入力してください' : null,
+    // },
   })
 
   // 画像アップロードハンドラ
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] // オプショナルチェーンを使用してfilesへアクセス
+  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0] // オプショナルチェーンを使用してfilesへアクセス
 
-    if (file) {
-      form.setFieldValue('profileImage', URL.createObjectURL(file))
-    }
-  }
+  //   if (file) {
+  //     form.setFieldValue('profileImage', URL.createObjectURL(file))
+  //   }
+  // }
 
-  // 言語選択の追加ハンドラ
-  const addLanguageInput = () => {
-    setLanguageInputs([...languageInputs, { id: Math.random(), value: '' }])
-  }
+  // const languages = ['Japanese', 'Korean', 'English', 'Chinese'];
 
-  // 言語選択の変更ハンドラ
-  const handleLanguageChange = (id: number, value: string) => {
-    const updatedLanguageInputs = languageInputs.map((input) =>
-      input.id === id ? { ...input, value: value } : input,
-    )
-    setLanguageInputs(updatedLanguageInputs)
+  // Checkboxの状態を更新するハンドラ
+  // const handleLanguageChange = (language: string, checked: boolean) => {
+  //   let updatedLanguages = form.values.available_languages;
 
-    // languageInputsを更新した後で、フォームのavailableLanguagesフィールドを更新
-    const updatedAvailableLanguages = updatedLanguageInputs.map((input) => input.value)
-    form.setFieldValue('availableLanguages', updatedAvailableLanguages)
-  }
+  //   if (checked) {
+  //     // 言語を追加
+  //     updatedLanguages = [...(updatedLanguages || []), language];
+  //   } else {
+  //     // 言語を削除
+  //     updatedLanguages = (updatedLanguages || []).filter((lang) => lang !== language);
+  //   }
+
+  //   form.setFieldValue('available_languages', updatedLanguages);
+  // };
 
   const handleScrollToTop = () => {
     scrollTo({ y: 0 })
   }
 
+
+  const accessToken = Cookies.get("accessToken");
   async function handleSubmit() {
-    if (registerStatus === 'register') {
-      setRegisterStatus('confirm')
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
+    const formData = {
+      support_status: form.values.support_status,
+      guide_area: form.values.guide_area,
+      introduction: form.values.introduction,
+      comment: form.values.comment,
+      // available_languages: form.values.available_languages,
+      // user_details: {
+      //   email: form.values.email,
+      //   last_name: form.values.last_name,
+      //   last_name_kana: form.values.last_name_kana,
+      //   first_name: form.values.first_name,
+      //   first_name_kana: form.values.first_name_kana,
+      //   nickname: form.values.nickname,
+      //   gender: form.values.gender,
+      //   birthday: form.values.birthday,
+      //   phone_number: form.values.phone_number,
+      //   profile_image: form.values.profile_image,
+      // }
+    };
+    try {
+      const response: Response = await fetch(endpoint, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        cache: "no-cache" as RequestCache,
+        body: JSON.stringify(formData)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json(); // エラーレスポンスの内容を取得
+        console.error('Error Response:', errorData); // エラー内容をログに出力
+        throw new Error('Failed to update the guide');
+      }
+      const data = await response.json()
+      console.log('Success:', data);
       handleScrollToTop()
+    } catch (error: any) {
+      console.error(error.message)
+      throw new Error(error.message)
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    router.push('/register/temporary')
   }
   return (
     <>
       <Box maw={290} mx="auto">
         <Paper shadow="lg" p="1rem" my="2rem" radius="lg">
           <form onSubmit={form.onSubmit(handleSubmit)}>
-            <input
+            {/* <input
               type="file"
               onChange={handleImageUpload}
               style={{ display: 'none' }}
               id="imageUpload"
-              disabled={registerStatus === 'confirm'}
             />
             <label htmlFor="imageUpload">
               <Image
-                src={form.values.profileImage || ProfileUpload}
+                src={form.values.profile_image || ProfileUpload}
                 width="96"
                 height="96"
                 alt="プロフィール画像アップロードボタン"
                 style={{ margin: '0 auto', display: 'block', cursor: 'pointer' }}
               />
-            </label>
+            </label> */}
+            <NativeSelect
+              label="対応ステータス"
+              {...form.getInputProps('support_status')}
+              data={[
+                { value: 'available', label: '対応可能' },
+                { value: 'unavailable', label: '対応不可' },
+              ]}
+              withAsterisk
+              styles={{ input: { opacity: '1', color: '#555' } }}
+              mt="1rem"
+            />
             <TextInput
               label="ガイド地域"
               placeholder="地域"
               required
-              value={form.values.guideArea}
-              onChange={(event) => form.setFieldValue('guideArea', event.currentTarget.value)}
-              error={form.errors.guideArea}
+              value={form.values.guide_area}
+              onChange={(event) => form.setFieldValue('guide_area', event.currentTarget.value)}
+              error={form.errors.guide_area}
             />
             <TextInput
               label="コメント"
               placeholder="コメント"
               required
               withAsterisk
-              value={form.values.introduction}
-              onChange={(event) => form.setFieldValue('introduction', event.currentTarget.value)}
-              error={form.errors.introduction}
+              value={form.values.comment}
+              onChange={(event) => form.setFieldValue('comment', event.currentTarget.value)}
+              error={form.errors.comment}
             />
             <Textarea
               label="紹介文"
               placeholder="紹介文"
               required
-              value={form.values.comment}
-              onChange={(event) => form.setFieldValue('comment', event.currentTarget.value)}
-              error={form.errors.comment}
+              value={form.values.introduction}
+              onChange={(event) => form.setFieldValue('introduction', event.currentTarget.value)}
+              error={form.errors.introduction}
             />
-            <TextInput
+            {/* <TextInput
               label="姓"
-              {...form.getInputProps('lastName')}
+              {...form.getInputProps('last_name')}
               mt="1rem"
               placeholder="姓"
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
               label="姓（カナ）"
-              {...form.getInputProps('lastNameKana')}
+              {...form.getInputProps('last_name_kana')}
               mt="1rem"
               placeholder="セイ"
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
               label="名"
-              {...form.getInputProps('firstName')}
+              {...form.getInputProps('first_name')}
               mt="1rem"
               placeholder="名"
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
             <TextInput
               label="名（カナ）"
-              {...form.getInputProps('firstNameKana')}
+              {...form.getInputProps('first_name_kana')}
               mt="1rem"
               placeholder="メイ"
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
@@ -238,7 +277,6 @@ export function GuideProfileForm({ initialValues }: Props) {
               {...form.getInputProps('nickname')}
               mt="1rem"
               placeholder="ニックネーム"
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
@@ -246,7 +284,6 @@ export function GuideProfileForm({ initialValues }: Props) {
               label="性別"
               {...form.getInputProps('gender')}
               data={['未選択', '指定しない', '男性', '女性']}
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
               mt="1rem"
@@ -256,40 +293,23 @@ export function GuideProfileForm({ initialValues }: Props) {
               {...form.getInputProps('birthday')}
               placeholder="XXXX-XX-XX"
               mt="1rem"
-              disabled={registerStatus === 'confirm'}
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
-            {languageInputs.map((input, index) => (
-              <>
-                <NativeSelect
-                  key={input.id}
-                  label={`対応可能言語 ${index + 1}`}
-                  value={input.value}
-                  onChange={(event) => handleLanguageChange(input.id, event.currentTarget.value)}
-                  data={['未選択', 'Japanese', 'Korean', 'English', 'Chinese']}
-                  mt="1rem"
-                  disabled={registerStatus === 'confirm'}
-                  withAsterisk
-                  styles={{ input: { opacity: '1', color: '#555' } }}
+            <Group justify="column" gap="xs" mt={16}>
+              {languages.map((language) => (
+                <Checkbox
+                  key={language}
+                  label={language}
+                  checked={form.values.available_languages?.includes(language) || false}
+                  onChange={(event) => handleLanguageChange(language, event.currentTarget.checked)}
                 />
-              </>
-            ))}
-            <>
-              {form.errors.availableLanguages && (
-                <Text c="red" size="xs" mt={5}>
-                  {form.errors.availableLanguages}
-                </Text>
-              )}
-              <Text onClick={addLanguageInput} c="blue" size="xs" mt={5}>
-                ＋対応可能言語を追加
-              </Text>
-            </>
+              ))}
+            </Group>
             <TextInput
               label="電話番号"
-              {...form.getInputProps('phoneNumber')}
+              {...form.getInputProps('phone_number')}
               mt="1rem"
               placeholder="1234567890"
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
             />
@@ -298,43 +318,11 @@ export function GuideProfileForm({ initialValues }: Props) {
               {...form.getInputProps('email')}
               mt="1rem"
               placeholder="example@example.com"
-              disabled={registerStatus === 'confirm'}
               withAsterisk
               styles={{ input: { opacity: '1', color: '#555' } }}
-            />
-            <PasswordInput
-              label="パスワード"
-              {...form.getInputProps('password')}
-              mt="1rem"
-              placeholder="xxxxxxxx"
-              disabled={registerStatus === 'confirm'}
-              withAsterisk
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
-            <PasswordInput
-              label="パスワード（確認用）"
-              {...form.getInputProps('confirmPassword')}
-              mt="1rem"
-              placeholder="xxxxxxxx"
-              disabled={registerStatus === 'confirm'}
-              withAsterisk
-              styles={{ input: { opacity: '1', color: '#555' } }}
-            />
+            /> */}
             <Group justify="center" mt="md">
-              <Button type="submit">確認</Button>
-              <>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setRegisterStatus('register')
-                    handleScrollToTop()
-                  }}
-                >
-                  修正
-                </Button>
-                <Button type="submit">登録</Button>
-              </>
-              {pathname === '/profile' && <Button type="submit">保存</Button>}
+              <Button type="submit">保存</Button>
             </Group>
           </form>
         </Paper>
@@ -350,8 +338,11 @@ export function GuideProfileForm({ initialValues }: Props) {
             </Stack>
           </Group>
           <Group justify="flex-end" my="2rem">
-            <Button component={Link} href="/guide/register">
-              ガイド登録
+            <Button component={Link} href={`/user/${initialValues?.user_id}`}>
+              ユーザーダッシュボードへ
+            </Button>
+            <Button component={Link} href="/" color='red' variant='outline'>
+              ガイド登録解除
             </Button>
             <Button component={Link} href="/" color="red" variant="outline">
               退会

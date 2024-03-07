@@ -4,7 +4,25 @@ import { GuideProfileForm } from '@/app/(authenticated)/_components/guide/guide-
 import { GuideTabs } from '@/app/(authenticated)/_components/guide/guide-tabs'
 
 
-export default function Page({ params }: { params: { guide_id: string } }) {
+export default async function Page({ params }: { params: { guide_id: string } }) {
+  const fetchGuideProfile = async (guide_id: string) => {
+    try {
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
+      const options: RequestInit = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store"
+      }
+      const response = await fetch(endpoint, options)
+      return response.json()
+    } catch (error: any) {
+      console.error(error.message)
+    }
+  }
+
+  const guideProfile = await fetchGuideProfile(params.guide_id)
   const guideEvaluations = {
     guide_id: "guide-uuid",
     user: {
@@ -43,7 +61,7 @@ export default function Page({ params }: { params: { guide_id: string } }) {
   return (
     <>
       <GuideTabs
-        profile={<GuideProfileForm />}
+        profile={<GuideProfileForm initialValues={guideProfile} guide_id={params.guide_id} />}
         evaluation={<GuideEvaluationCard evaluation={evaluation} guideEvaluate={reviews} />}
         plans={<GuidePlanInfo />}
       />
