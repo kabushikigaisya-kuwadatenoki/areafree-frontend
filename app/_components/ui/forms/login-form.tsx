@@ -2,6 +2,7 @@
 import { ComponentWrapper } from '@/app/_components/ui/common/component-wrapper'
 import { Button, Checkbox, Group, PasswordInput, Text, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { notifications } from '@mantine/notifications'
 import Cookies from "js-cookie"
 import Link from 'next/link'
 import { useRouter } from "next/navigation"
@@ -38,6 +39,9 @@ export function LoginForm() {
       });
 
       if (!response.ok) {
+        notifications.show({
+          message: "認証情報を確認してください。",
+        });
         throw new Error('Login failed');
       }
       const data = await response.json();
