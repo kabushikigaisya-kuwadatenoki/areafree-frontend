@@ -27,7 +27,7 @@ export function UserRegisterForm() {
   const pathname = usePathname()
 
   const defaultValues = {
-    profileImage: '',
+    profile_image: ProfileUpload,
     first_name: '',
     first_name_kana: '',
     last_name: '',
@@ -86,14 +86,8 @@ export function UserRegisterForm() {
     },
   })
 
-  // 画像アップロードハンドラ
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] // オプショナルチェーンを使用してfilesへアクセス
+  console.log(form.values.profile_image)
 
-    if (file) {
-      form.setFieldValue('profileImage', URL.createObjectURL(file))
-    }
-  }
 
   // 言語選択の追加ハンドラ
   const addLanguageInput = () => {
@@ -142,6 +136,15 @@ export function UserRegisterForm() {
       setResponseError('登録中にエラーが発生しました。');
     }
   }
+
+  // 画像アップロードハンドラ
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] // オプショナルチェーンを使用してfilesへアクセス
+
+    if (file) {
+      form.setFieldValue('profileImage', URL.createObjectURL(file))
+    }
+  }
   return (
     <>
       <Box maw={290} mx="auto">
@@ -166,7 +169,7 @@ export function UserRegisterForm() {
             />
             <label htmlFor="imageUpload">
               <Image
-                src={form.values.profileImage || ProfileUpload}
+                src={form.values.profile_image || ProfileUpload}
                 width="96"
                 height="96"
                 alt="プロフィール画像アップロードボタン"

@@ -15,6 +15,7 @@ import {
 import { useForm } from '@mantine/form'
 import { useWindowScroll } from '@mantine/hooks'
 import { useDisclosure } from "@mantine/hooks"
+import axios from "axios";
 import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -24,7 +25,7 @@ import { useState } from 'react'
 
 type Props = {
   initialValues?: {
-    profile_image?: string
+    profile_image: string
     first_name?: string
     first_name_kana?: string
     last_name?: string
@@ -34,7 +35,7 @@ type Props = {
     birthday?: string
     available_languages?: string[]
     phone_number?: string
-    email?: string
+    email: string
     password?: string
     confirmPassword?: string
     is_guide?: boolean
@@ -102,15 +103,41 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
           : null,
     },
   })
-
+  const [uploadFile, setUploadFile] = useState("")
+  const accessToken = Cookies.get("accessToken");
   // 画像アップロードハンドラ
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] // オプショナルチェーンを使用してfilesへアクセス
-
-    if (file) {
-      form.setFieldValue('profile_image', URL.createObjectURL(file))
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      setUploadFile("");
+      return;
     }
-  }
+
+    setUploadFile(file.name);
+    const previewUrl = URL.createObjectURL(file);
+    form.setFieldValue('profile_image', previewUrl);
+
+    // FormData オブジェクトの作成
+    const formData = new FormData();
+    formData.append('profile_image', file); // 'profile_image' はバックエンドが期待するフィールド名に合わせてください
+    formData.append("email", form.values.email)
+
+    try {
+      // axios を使用して PUT リクエストを送信
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // マルチパートフォームデータとして送信
+          Authorization: `Bearer ${accessToken}`
+        },
+      });
+
+      // 応答の処理（成功した場合）
+      console.log('Upload successful', response.data);
+    } catch (error) {
+      // エラー処理
+      console.error('Upload failed', error);
+    }
+  };
 
   const handleScrollToTop = () => {
     scrollTo({ y: 0 })
@@ -133,7 +160,7 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
     form.setFieldValue('available_languages', updatedLanguages);
   };
 
-  const accessToken = Cookies.get("accessToken");
+
   async function handleSubmit() {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`
     try {
@@ -145,13 +172,13 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
         },
         body: JSON.stringify(form.values)
       })
-
-      const data = await response.json()
-
       if (!response.ok) {
-        throw new Error(data)
+        const errorData = await response.json(); // エラーレスポンスの内容を取得
+        console.error('Error Response:', errorData); // エラー内容をログに出力
+        throw new Error('Failed to update the guide');
       }
-
+      const data = await response.json()
+      console.log('Success:', data);
       setCompleteUpdate("complete")
       handleScrollToTop()
     } catch (error: any) {
@@ -159,6 +186,8 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
       throw new Error(error.message)
     }
   }
+
+
   return (
     <>
       {completeUpdate && (
@@ -320,7 +349,7 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
             </Button>
           </Group>
         </>
-      </Box>
+      </Box >
     </>
   )
 }
