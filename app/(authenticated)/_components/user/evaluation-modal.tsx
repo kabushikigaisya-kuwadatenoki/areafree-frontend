@@ -3,6 +3,7 @@ import { apiRequestWithRefresh } from '@/app/_functions/refresh-token'
 import { Button, Group, Modal, Rating, Text, TextInput, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
+import { notifications } from '@mantine/notifications'
 import Cookies from 'js-cookie'
 
 export function EvaluationModal({ nickname, guideId }: { nickname: string; guideId: string }) {
@@ -31,11 +32,14 @@ export function EvaluationModal({ nickname, guideId }: { nickname: string; guide
 
       const response = await apiRequestWithRefresh(endpoint, options)
 
-      if (response.ok) {
+      if (response?.ok) {
+        notifications.show({
+          message: `${nickname}を評価しました！`,
+        });
         close() // モーダルを閉じる
       } else {
         // エラーレスポンスの処理
-        const errorData = await response.json()
+        const errorData = await response?.json()
         console.error('Review submission failed:', errorData)
       }
     } catch (error) {
