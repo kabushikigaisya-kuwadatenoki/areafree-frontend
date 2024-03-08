@@ -2,8 +2,8 @@
 import {
   Box,
   Button,
-  Checkbox,
   Group,
+  Modal,
   NativeSelect,
   Paper,
   Stack,
@@ -12,15 +12,11 @@ import {
   Textarea,
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useWindowScroll } from '@mantine/hooks'
+import { useDisclosure, useWindowScroll } from '@mantine/hooks'
+import { notifications } from '@mantine/notifications'
 import Cookies from 'js-cookie'
-import Image from 'next/image'
-import Link from 'next/link'
-
-import React from 'react'
-import { useState } from 'react'
-
-// 色については後々テーマで設定します。
+import Link from "next/link"
+import { useRouter } from 'next/navigation'
 
 type Props = {
   initialValues?: {
@@ -49,7 +45,9 @@ type Props = {
 }
 
 export function GuideProfileForm({ initialValues, guide_id }: Props) {
+  const router = useRouter()
   const [scroll, scrollTo] = useWindowScroll()
+  const [opened, { open, close }] = useDisclosure()
 
   const defaultValues = {
     support_status: initialValues?.support_status || '',
@@ -184,8 +182,50 @@ export function GuideProfileForm({ initialValues, guide_id }: Props) {
       throw new Error(error.message)
     }
   }
+  async function handleDelete() {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
+    try {
+      const response: Response = await fetch(endpoint, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        cache: "no-cache" as RequestCache,
+      })
+
+      if (response?.ok) {
+        notifications.show({
+          message: "ガイド登録情報を削除しました！",
+        });
+        router.push(`/user/${initialValues?.user_id}`)
+        close()
+      }
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error(error.message);
+    }
+  }
   return (
     <>
+      <Modal opened={opened} onClose={close} title="ガイド登録解除" fw={700}>
+        <Paper withBorder p={20} >
+          <Text fw={700} size='sx' ta="center">
+            ガイド登録を解除しますか？
+          </Text>
+          <Text ta="center" size="xs" mt={16}>
+            ガイド登録を解除すると、登録情報が破棄され復元できません。<br />
+            プランに加入している場合、プランは解除と同時に自動で退会されます。
+          </Text>
+          <Text ta="center" size="xs" mt={16}>
+            ガイド登録解除後も、引き続きガイド検索などの一般機能はご利用いただけます。
+          </Text>
+        </Paper>
+        <Group mt={20} justify='flex-end'>
+          <Button variant='outline' onClick={() => close()}>キャンセル</Button>
+          <Button variant='fill' bg='red' onClick={() => { handleDelete() }}>退会</Button>
+        </Group>
+      </Modal>
       <Box maw={290} mx="auto">
         <Paper shadow="lg" p="1rem" my="2rem" radius="lg">
           <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -341,7 +381,7 @@ export function GuideProfileForm({ initialValues, guide_id }: Props) {
             <Button component={Link} href={`/user/${initialValues?.user_id}`}>
               ユーザーダッシュボードへ
             </Button>
-            <Button component={Link} href="/" color='red' variant='outline'>
+            <Button onClick={() => open()} color='red' variant='outline'>
               ガイド登録解除
             </Button>
             <Button component={Link} href="/" color="red" variant="outline">

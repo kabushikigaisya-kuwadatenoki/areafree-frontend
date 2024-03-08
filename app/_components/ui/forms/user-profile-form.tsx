@@ -15,12 +15,15 @@ import {
 import { useForm } from '@mantine/form'
 import { useWindowScroll } from '@mantine/hooks'
 import { useDisclosure } from "@mantine/hooks"
+import { notifications } from '@mantine/notifications'
 import axios from "axios";
 import Cookies from 'js-cookie'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from "next/navigation"
 import React from 'react'
-import { useState } from 'react'
+import { useState } from "react"
+
 // 色については後々テーマで設定します。
 
 type Props = {
@@ -49,6 +52,7 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
   const [opened, { open, close }] = useDisclosure(false)
   const [completeUpdate, setCompleteUpdate] = useState("")
   const [scroll, scrollTo] = useWindowScroll()
+  const router = useRouter()
 
   const defaultValues = {
     profile_image: '',
@@ -187,6 +191,36 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
     }
   }
 
+  async function handleDelete() {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`
+    try {
+      const response = await fetch(endpoint, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+      })
+      if (!response.ok) {
+        notifications.show({
+          message: "退会に失敗しました。",
+        });
+        throw new Error("退会に失敗しました。")
+      }
+      Cookies.remove('accessToken')
+      Cookies.remove('refreshToken')
+      notifications.show({
+        message: "退会しました。",
+      });
+
+      router.push("/login")
+
+    } catch (error: any) {
+      console.error(error.message)
+      throw new Error(error.message)
+    }
+  }
+
 
   return (
     <>
@@ -206,7 +240,7 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
           <Button onClick={close} variant="outline">
             キャンセル
           </Button>
-          <Button bg="red" variant='fill' onClick={() => { console.log("退会") }}>退会</Button>
+          <Button bg="red" variant='fill' onClick={() => { handleDelete() }}>退会</Button>
         </Group>
       </Modal>
       <Box maw={290} mx="auto">
