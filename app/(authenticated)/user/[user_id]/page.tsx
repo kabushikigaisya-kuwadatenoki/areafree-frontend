@@ -1,7 +1,6 @@
 import { DetailFilter } from '@/app/(authenticated)/_components/user/detail-filter'
 import { GuideCard } from '@/app/(authenticated)/_components/user/guide-card'
 import { UserTabs } from '@/app/(authenticated)/_components/user/user-tabs'
-// import { GuideCardWrapper } from '@/app/(authenticated)/user/[user_id]/_components/guide-list'
 import { SearchForm } from '@/app/_components/ui/common/search-form'
 import { LoadingOverlay } from '@mantine/core'
 import { Paper, Text } from '@mantine/core'
@@ -57,7 +56,6 @@ const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) =
       </Paper>
       <Suspense fallback={<LoadingOverlay />}>
         <GuideCard guides={guides} userId={userId} />
-        {/* <GuideCardWrapper guides={guides} userId={userId} /> */}
       </Suspense>
     </>
   );

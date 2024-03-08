@@ -5,7 +5,7 @@ import { GuideCardDetail } from '@/app/(authenticated)/_components/user/guide-ca
 import { KebabReport } from '@/app/(authenticated)/_components/user/kebab-report'
 import { Stack } from '@mantine/core'
 
-export default async function Page({ params }: { params: { guide_id: string } }) {
+export default async function Page({ params }: { params: { guide_id: string, user_id: string } }) {
   const fetchGuideDetail = async (guide_id: string) => {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/detail/${guide_id}/`;
 
@@ -27,13 +27,13 @@ export default async function Page({ params }: { params: { guide_id: string } })
   };
 
   const guide = await fetchGuideDetail(params.guide_id)
-  console.log(guide)
+
   return (
     <>
       <EvaluationModal nickname={guide.guide_nickname} guideId={guide.id} />
       <Stack justify="center" align="center" gap={0} mt="sm">
         <GuideCardDetail guides={guide} />
-        <KebabReport nickname={guide.guide_nickname} guideId={guide.id} />
+        <KebabReport userId={params.user_id} nickname={guide.guide_nickname} guideId={guide.id} />
       </Stack>
     </>
   )
