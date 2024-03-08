@@ -49,10 +49,10 @@ export function GuideCard({ guides, userId }: Props) {
           radius="md"
           onClick={() => handleCardClick(guide.id, userId)}
           style={{ cursor: 'pointer' }}
-          key={guide.id}
+          key={guide.id ? guide.id : Math.random()}
         >
           <Group>
-            <Image src={guide.profile_image ? guide.profile_image : "/prof-dummy.png"} alt={guide.guide_nickname} width={87} height={76} />
+            <Image src={guide.profile_image ? guide.profile_image : "/prof-dummy.png"} alt={guide.guide_nickname ? guide.guide_nickname : ""} width={87} height={76} />
             <Box w="60%">
               <Text size="10px" mb="xs">
                 ガイド評価
