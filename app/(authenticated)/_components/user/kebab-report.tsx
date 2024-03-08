@@ -12,11 +12,13 @@ import {
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
+import { notifications } from '@mantine/notifications';
 import { IconBell, IconDotsVertical, IconPhone } from '@tabler/icons-react'
-
-export function KebabReport({ guideId, nickname }: { guideId: string; nickname: string }) {
+import Cookies from 'js-cookie'
+import { useRouter } from "next/navigation"
+export function KebabReport({ guideId, userId, nickname }: { guideId: string; nickname: string, userId: string }) {
   const [opened, { open, close }] = useDisclosure(false)
-
+  const router = useRouter()
   const form = useForm({
     initialValues: {
       reason: '',
@@ -24,6 +26,8 @@ export function KebabReport({ guideId, nickname }: { guideId: string; nickname: 
     },
   })
 
+  const accessToken = Cookies.get("accessToken")
+  console.log(accessToken)
   const handleReport = async () => {
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reports/`
@@ -31,6 +35,7 @@ export function KebabReport({ guideId, nickname }: { guideId: string; nickname: 
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ ...form.values, guide: guideId }),
       }
@@ -46,20 +51,33 @@ export function KebabReport({ guideId, nickname }: { guideId: string; nickname: 
 
   const handleBlock = async () => {
     try {
-      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/`
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/`;
       const options = {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ guide: guideId }),
-      }
-      const response = await apiRequestWithRefresh(endpoint, options)
+      };
+      const response = await apiRequestWithRefresh(endpoint, options);
+      console.log(response)
       if (response.ok) {
-        close()
+        // 成功時の処理
+        const result = await response.json();
+        notifications.show({
+          message: `${nickname}をブロックしました！`,
+        });
+        router.push(`/user/${userId}`);
+      } else {
+        // エラー時の処理
+        const errorResult = await response.json();
+        notifications.show({
+          message: errorResult.error,
+        });
       }
     } catch (error: any) {
-      console.log(error.message)
+      console.log(error.message);
     }
   }
 
