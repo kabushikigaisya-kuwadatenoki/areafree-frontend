@@ -4,7 +4,7 @@ import { UserTabs } from '@/app/(authenticated)/_components/user/user-tabs'
 import { SearchForm } from '@/app/_components/ui/common/search-form'
 import { LoadingOverlay } from '@mantine/core'
 import { Paper } from '@mantine/core'
-// import Cookies from 'js-cookie'
+import { cookies } from "next/headers"
 import { Suspense } from 'react'
 
 type Props = {
@@ -34,12 +34,17 @@ const fetchGuideIndex = async (userId: string, searchParams?: Props['searchParam
   const queryParams = new URLSearchParams(searchParams as any);
   queryParams.append('user_id', userId); // ユーザーIDを追加
   const queryString = queryParams.toString();
+
+  const cookieStore = cookies()
+  const accessToken = cookieStore.get("accessToken")
+
   const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides${queryString ? `?${queryString}` : '/'}`;
   try {
     const response = await fetch(endpoint, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
       },
       cache: 'no-store'
     });
