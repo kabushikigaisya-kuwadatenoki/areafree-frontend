@@ -3,7 +3,8 @@ import { GuideCard } from '@/app/(authenticated)/_components/user/guide-card'
 import { UserTabs } from '@/app/(authenticated)/_components/user/user-tabs'
 import { SearchForm } from '@/app/_components/ui/common/search-form'
 import { LoadingOverlay } from '@mantine/core'
-import { Paper, Text } from '@mantine/core'
+import { Paper } from '@mantine/core'
+import Cookies from 'js-cookie'
 import { Suspense } from 'react'
 
 type Props = {
@@ -24,7 +25,7 @@ type GuideIndexItemsProps = {
     evaluation?: string;
   };
 };
-
+const accessToken = Cookies.get("accessToken")
 const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
   const queryParams = new URLSearchParams(searchParams as any).toString();
   const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides${queryParams ? `?${queryParams}` : '/'}`;
@@ -33,6 +34,7 @@ const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
       },
       cache: 'no-store'
     });
@@ -48,6 +50,7 @@ const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
 
 const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) => {
   const guides = await fetchGuideIndex(searchParams);
+  console.log(guides)
   return (
     <>
       <Paper bg="#CDE8E2" p="xs">
@@ -73,18 +76,13 @@ const GuideSearchMap = () => {
 export default async function Page({ params, searchParams }: Props) {
 
   const { user_id } = params
-  const { gender, status, evaluation } = searchParams
+  // const { gender, status, evaluation } = searchParams
   return (
     <>
       <UserTabs
         indexGuideComponents={<GuideIndexItems userId={user_id} searchParams={searchParams} />}
         searchMapComponents={<GuideSearchMap />}
       />
-      <Text>
-        {gender}
-        {status}
-        {evaluation}
-      </Text>
     </>
   )
 }
