@@ -86,7 +86,6 @@ export function UserRegisterForm() {
     },
   })
 
-  console.log(form.values.profile_image)
 
 
   // 言語選択の追加ハンドラ
