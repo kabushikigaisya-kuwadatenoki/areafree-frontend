@@ -22,6 +22,23 @@ export default async function Page({ params }: { params: { guide_id: string } })
     }
   }
 
+  const fetchGuideEvaluation = async (guide_id: string) => {
+    try {
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
+      const options: RequestInit = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store"
+      }
+      const response = await fetch(endpoint, options)
+      return response.json()
+    } catch (error: any) {
+      console.error(error.message)
+    }
+  }
+
   const guideProfile = await fetchGuideProfile(params.guide_id)
   const guideEvaluations = {
     guide_id: "guide-uuid",

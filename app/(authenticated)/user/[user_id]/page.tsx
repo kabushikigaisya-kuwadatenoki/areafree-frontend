@@ -1,6 +1,7 @@
 import { DetailFilter } from '@/app/(authenticated)/_components/user/detail-filter'
 import { GuideCard } from '@/app/(authenticated)/_components/user/guide-card'
 import { UserTabs } from '@/app/(authenticated)/_components/user/user-tabs'
+// import { GuideCardWrapper } from '@/app/(authenticated)/user/[user_id]/_components/guide-list'
 import { SearchForm } from '@/app/_components/ui/common/search-form'
 import { LoadingOverlay } from '@mantine/core'
 import { Paper, Text } from '@mantine/core'
@@ -28,13 +29,13 @@ type GuideIndexItemsProps = {
 const fetchGuideIndex = async (searchParams?: Props['searchParams']) => {
   const queryParams = new URLSearchParams(searchParams as any).toString();
   const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides${queryParams ? `?${queryParams}` : '/'}`;
-
   try {
     const response = await fetch(endpoint, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-store'
     });
     if (!response.ok) {
       throw new Error(`An error occurred: ${response.statusText}`);
@@ -56,6 +57,7 @@ const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) =
       </Paper>
       <Suspense fallback={<LoadingOverlay />}>
         <GuideCard guides={guides} userId={userId} />
+        {/* <GuideCardWrapper guides={guides} userId={userId} /> */}
       </Suspense>
     </>
   );
