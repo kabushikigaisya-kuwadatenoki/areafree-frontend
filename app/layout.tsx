@@ -3,6 +3,8 @@ import { theme } from '@/theme'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
+import { Notifications } from '@mantine/notifications'
+import '@mantine/notifications/styles.css';
 import React from 'react'
 
 export const metadata = {
@@ -25,7 +27,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider theme={theme}>
+          <Notifications />
+          {children}
+        </MantineProvider>
       </body>
     </html>
   )
