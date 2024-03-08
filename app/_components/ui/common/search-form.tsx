@@ -16,9 +16,9 @@ export function SearchForm() {
     const params = new URLSearchParams(searchParams)
 
     if (term) {
-      params.set('query', term)
+      params.set('nickname', term)
     } else {
-      params.delete('query')
+      params.delete('nickname')
     }
 
     if (favorites) {
@@ -36,7 +36,7 @@ export function SearchForm() {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.currentTarget.checked)
-    updateQueryParams(searchParams.get('query') || '', event.currentTarget.checked)
+    updateQueryParams(searchParams.get('nickname') || '', event.currentTarget.checked)
   }
 
   return (
