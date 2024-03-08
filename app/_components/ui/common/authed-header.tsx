@@ -24,16 +24,14 @@ export function AuthedHeader() {
   const accessToken = Cookies.get("accessToken");
   let userId: string | undefined;
 
-
   if (accessToken) {
-    const decodedToken = jwtDecode(accessToken) as { user_id: string };
+    const decodedToken = jwtDecode(accessToken) as { user_id: string, guie_id: string };
     userId = decodedToken.user_id;
   }
-  console.log(userId)
   return (
     <Paper shadow="lg" px="md">
       <Flex justify="space-between" align="center" h="52px">
-        <Link href="/">
+        <Link href={`/user/${userId}`}>
           <Image src={logo} width={85} height={37} alt="logo" />
         </Link>
         <Flex gap="sm" align="center">
