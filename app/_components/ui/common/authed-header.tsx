@@ -38,9 +38,9 @@ export function AuthedHeader() {
           <Link href={"/guide/register"}>
             <Text size="10px" c="blue">ガイドになる</Text>
           </Link>
-          <Link href={"/user"}>
+          {/* <Link href={"/user"}>
             <IconBell size={24} strokeWidth={2} color={'#F59E0B'} />
-          </Link>
+          </Link> */}
           <Link href={`/user/${userId}/profile`}>
             <IconUserCircle size={24} strokeWidth={2} color={'#555555'} />
           </Link>

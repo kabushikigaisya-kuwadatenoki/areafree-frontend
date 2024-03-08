@@ -13,7 +13,7 @@ import {
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications';
-import { IconBell, IconDotsVertical, IconPhone } from '@tabler/icons-react'
+import { IconDotsVertical, IconPhone } from '@tabler/icons-react'
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation"
 export function KebabReport({ guideId, userId, nickname }: { guideId: string; nickname: string, userId: string }) {
@@ -27,7 +27,6 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
   })
 
   const accessToken = Cookies.get("accessToken")
-  console.log(accessToken)
   const handleReport = async () => {
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reports/`
@@ -41,7 +40,7 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
       }
       const response = await apiRequestWithRefresh(endpoint, options)
 
-      if (response.ok) {
+      if (response?.ok) {
         close()
       }
     } catch (error: any) {
@@ -62,7 +61,7 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
       };
       const response = await apiRequestWithRefresh(endpoint, options);
       console.log(response)
-      if (response.ok) {
+      if (response?.ok) {
         // 成功時の処理
         const result = await response.json();
         notifications.show({
@@ -71,7 +70,7 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
         router.push(`/user/${userId}`);
       } else {
         // エラー時の処理
-        const errorResult = await response.json();
+        const errorResult = await response?.json();
         notifications.show({
           message: errorResult.error,
         });
@@ -130,9 +129,9 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
           <ActionIcon variant="default" style={{ border: 'unset' }}>
             <IconPhone stroke={1} />
           </ActionIcon>
-          <ActionIcon variant="default" style={{ border: 'unset' }}>
+          {/* <ActionIcon variant="default" style={{ border: 'unset' }}>
             <IconBell stroke={1} />
-          </ActionIcon>
+          </ActionIcon> */}
         </Group>
         <Menu>
           <Menu.Target>
