@@ -3,6 +3,7 @@ import { Alert, Box, Button, Group, Paper, Text, TextInput, Textarea } from '@ma
 import { useForm } from '@mantine/form'
 import Cookies from 'js-cookie'
 import Link from 'next/link'
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export function GuideRegisterForm() {
@@ -21,7 +22,7 @@ export function GuideRegisterForm() {
     },
   })
 
-  // const router = useRouter();
+  const router = useRouter();
 
   const handleSubmit = async () => {
     // 毎回undefinedになる。httponlyを外したい
@@ -43,9 +44,10 @@ export function GuideRegisterForm() {
         throw new Error(errorData.detail || 'ガイド情報の登録に失敗しました。');
       }
 
+      router.push("/guide/register/complete")
     } catch (error: any) {
       console.error(error.message);
-      setResponseError(error.message); // エラーメッセージを更新
+      setResponseError(error.message);
     }
   };
   return (
