@@ -28,7 +28,7 @@ export function GuideCardDetail({ guides }: Props) {
       {guidesArray.map((item) => (
         <Card withBorder maw={375} mx="auto" shadow="xs" p="md" mt="xs" radius="md" key={item.id}>
           <Group>
-            <Image src={item.profile_image} alt={item.guide_nickname} width={87} height={76} />
+            <Image src={item.profile_image ? item.profile_image : "/prof-dummy.png"} alt={item.guide_nickname} width={87} height={76} />
             <Box w="50%">
               <Text size="10px" mb="xs">
                 ガイド評価

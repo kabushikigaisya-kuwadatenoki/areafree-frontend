@@ -52,7 +52,7 @@ export function GuideCard({ guides, userId }: Props) {
           key={guide.id}
         >
           <Group>
-            <Image src={guide.profile_image} alt={guide.guide_nickname} width={87} height={76} />
+            <Image src={guide.profile_image ? guide.profile_image : "/prof-dummy.png"} alt={guide.guide_nickname} width={87} height={76} />
             <Box w="60%">
               <Text size="10px" mb="xs">
                 ガイド評価
