@@ -1,13 +1,17 @@
 'use client'
+import { formatDate } from '@/app/_functions/format-date'
 import { Box, Button, Card, Group, Rating, Text } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { notifications } from '@mantine/notifications'
 import { IconStar } from '@tabler/icons-react'
+import Cookies from "js-cookie"
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
 type Guide = {
-  id: number
+  id: string
+  user: string
   nickname: string
   evaluation: number
   created_at: string
@@ -29,12 +33,39 @@ export function BlockedGuideCard({ guides }: Props) {
     },
   })
 
+  console.log(form.values)
+
   const guidesArray = Array.isArray(guides) ? guides : [guides]
   const router = useRouter()
 
-  const MoveEvaluation = (e: React.MouseEvent, id: number) => {
+  const MoveEvaluation = (e: React.MouseEvent, id: string) => {
     e.stopPropagation()
     router.push(`/guide/${id}/evaluation`)
+  }
+
+  async function handleDelete(id: string, user: string, nickname: string) {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/${id}/`
+    const accessToken = Cookies.get("accessToken")
+    try {
+      const response: Response = await fetch(endpoint, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        cache: "no-cache" as RequestCache,
+      })
+
+      if (response?.ok) {
+        notifications.show({
+          message: `${nickname}のブロックを解除しました`,
+        });
+        close()
+      }
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error(error.message);
+    }
   }
 
   return (
@@ -51,11 +82,11 @@ export function BlockedGuideCard({ guides }: Props) {
           style={{ cursor: 'pointer', position: 'relative' }}
           key={item.id}
         >
-          <Button style={{ position: 'absolute', right: '16px' }} display="inline" bg="red">
+          <Button style={{ position: 'absolute', right: '16px' }} display="inline" bg="red" onClick={() => { handleDelete(item.id, item.user, item.nickname) }}>
             解除
           </Button>
           <Group>
-            <Image src={item.profile_image} alt={item.nickname} width={87} height={76} />
+            <Image src={item.profile_image ? item.profile_image : "/prof-dummy.png"} alt={item.nickname} width={87} height={76} />
             <Box w="60%">
               <Text size="10px" mb="xs">
                 ガイド評価
@@ -72,11 +103,11 @@ export function BlockedGuideCard({ guides }: Props) {
                   onClick={(e) => MoveEvaluation(e, item.id)}
                 />
               </Group>
-              <Group>
+              <Group mt={5}>
                 <Box>
                   <Text size="10px">ガイド歴</Text>
                   <Text size="10px" mt="5px">
-                    {item.created_at}
+                    {formatDate(item.created_at)}
                   </Text>
                 </Box>
                 <Box>

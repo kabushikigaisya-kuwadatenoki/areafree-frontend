@@ -363,8 +363,8 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
               <Text size="xs" c="red" component={Link} href="/">
                 パスワードを変更する
               </Text>
-              <Text size="xs" c="red" component={Link} href="/">
-                ブロックしているユーザー
+              <Text size="xs" c="red" component={Link} href={`/user/${user_id}/block`}>
+                ブロックしているガイド
               </Text>
             </Stack>
           </Group>

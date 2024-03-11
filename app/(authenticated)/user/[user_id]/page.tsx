@@ -2,9 +2,10 @@ import { DetailFilter } from '@/app/(authenticated)/_components/user/detail-filt
 import { GuideCard } from '@/app/(authenticated)/_components/user/guide-card'
 import { UserTabs } from '@/app/(authenticated)/_components/user/user-tabs'
 import { SearchForm } from '@/app/_components/ui/common/search-form'
-import { LoadingOverlay } from '@mantine/core'
+import { Group, LoadingOverlay } from '@mantine/core'
 import { Paper } from '@mantine/core'
 import { cookies } from "next/headers"
+import Image from "next/image"
 import { Suspense } from 'react'
 
 type Props = {
@@ -78,10 +79,21 @@ const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) =
 };
 
 
-const GuideSearchMap = () => {
+const GuideSearchMap = async ({ userId, searchParams }: GuideIndexItemsProps) => {
+  const dummy_map = "/dummy-map.png"
+  const guides = await fetchGuideIndex(userId, searchParams);
   return (
     <>
-
+      <Paper bg="#CDE8E2" p="xs">
+        <SearchForm />
+        <DetailFilter />
+      </Paper>
+      <Group justify='center' mt={12}>
+        <Image src={dummy_map} alt='dummy' width={352} height={191} />
+      </Group>
+      <Suspense fallback={<LoadingOverlay />}>
+        <GuideCard guides={guides} userId={userId} />
+      </Suspense>
     </>
   )
 }
@@ -94,7 +106,7 @@ export default async function Page({ params, searchParams }: Props) {
     <>
       <UserTabs
         indexGuideComponents={<GuideIndexItems userId={user_id} searchParams={searchParams} />}
-        searchMapComponents={<GuideSearchMap />}
+        searchMapComponents={<GuideSearchMap userId={user_id} searchParams={searchParams} />}
       />
     </>
   )

@@ -198,7 +198,9 @@ export function GuideProfileForm({ initialValues, guide_id }: Props) {
         notifications.show({
           message: "ガイド登録情報を削除しました！",
         });
-        router.push(`/user/${initialValues?.user_id}`)
+        Cookies.remove('accessToken')
+        Cookies.remove('refreshToken')
+        router.push("/login")
         close()
       }
     } catch (error: any) {
@@ -367,26 +369,26 @@ export function GuideProfileForm({ initialValues, guide_id }: Props) {
           </form>
         </Paper>
         <>
-          <Group justify="flex-end">
-            <Stack>
-              <Text size="xs" c="red" component={Link} href="/">
-                パスワードを変更する
-              </Text>
-              <Text size="xs" c="red" component={Link} href="/">
-                ブロックしているユーザー
-              </Text>
-            </Stack>
-          </Group>
           <Group justify="flex-end" my="2rem">
             <Button component={Link} href={`/user/${initialValues?.user_id}`}>
               ユーザーダッシュボードへ
             </Button>
-            <Button onClick={() => open()} color='red' variant='outline'>
-              ガイド登録解除
-            </Button>
-            <Button component={Link} href="/" color="red" variant="outline">
+            <Group justify="flex-end">
+              <Button onClick={() => open()} color='red' variant='outline'>
+                ガイド登録解除
+              </Button>
+              {/* <Stack>
+                <Text size="xs" c="red" component={Link} href="/">
+                  パスワードを変更する
+                </Text>
+                <Text size="xs" c="red" component={Link} href="/">
+                  ブロックしているユーザー
+                </Text>
+              </Stack> */}
+            </Group>
+            {/* <Button component={Link} href="/" color="red" variant="outline">
               退会
-            </Button>
+            </Button> */}
           </Group>
         </>
       </Box>

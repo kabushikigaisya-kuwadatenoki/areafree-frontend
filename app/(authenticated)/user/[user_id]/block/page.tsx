@@ -1,23 +1,31 @@
 import { BreadBrumbs } from '@/app/_components/ui/common/bread-crumbs'
+import { cookies } from "next/headers"
 import { BlockedGuideCard } from './_components/blocked-guide-card'
 
-
-export default async function Page() {
+export default async function Page({ params }: { params: { user_id: string } }) {
   const fetchBlockedGuide = async () => {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/`
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
+    const cookieStore = cookies()
+    const accessTokenObj = cookieStore.get("accessToken");
+
+    // accessTokenObjから実際のトークン値を取得
+    const accessToken = accessTokenObj ? accessTokenObj.value : null;
     try {
-      const response = await fetch(endpoint, options);
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+        cache: 'no-store'
+      });
       if (!response.ok) {
-        throw new Error(`An error occurred: ${response.statusText}`);
+        // エラーレスポンスの詳細を取得してログに記録
+        const errorResponse = await response.json();
+        console.error('Error response:', errorResponse);
+        throw new Error(`An error occurred: ${response.statusText}. Details: ${JSON.stringify(errorResponse)}`);
       }
-      const data = await response.json()
-      return data
+      return await response.json();
     } catch (error) {
       console.error('Fetching guide index failed:', error);
       return {};
@@ -25,48 +33,10 @@ export default async function Page() {
   }
 
   const bloked_guide = await fetchBlockedGuide()
-
-  console.log(bloked_guide)
-  const guide_dummy = [
-    {
-      id: 1,
-      nickname: 'TaroTokyo',
-      evaluation: 3.7,
-      created_at: '2024-02-22',
-      available_languages: ['English', 'Japanese'],
-      comment: 'Very knowledgeable and friendly guide!',
-      is_favorite: true,
-      profile_image: '/prof-dummy.png',
-      address: '東京都新宿区',
-    },
-    {
-      id: 2,
-      nickname: 'TaroTokyo',
-      evaluation: 3.7,
-      created_at: '2024-02-22',
-      available_languages: ['English', 'Japanese'],
-      comment: 'Very knowledgeable and friendly guide!',
-      is_favorite: true,
-      profile_image: '/prof-dummy.png',
-      address: '東京都新宿区',
-    },
-    {
-      id: 3,
-      nickname: 'TaroTokyo',
-      evaluation: 3.7,
-      created_at: '2024-02-22',
-      available_languages: ['English', 'Japanese'],
-      comment: 'Very knowledgeable and friendly guide!',
-      is_favorite: true,
-      profile_image: '/prof-dummy.png',
-      address: '東京都新宿区',
-    },
-  ]
-
   return (
     <>
-      <BreadBrumbs text="ブロックリスト" link="/user" />
-      <BlockedGuideCard guides={guide_dummy} />
+      <BreadBrumbs text="ブロックリスト" link={`/user/${params.user_id}`} />
+      {Object.keys(bloked_guide).length > 0 && <BlockedGuideCard guides={bloked_guide} />}
     </>
   )
 }
