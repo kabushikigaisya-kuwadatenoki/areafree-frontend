@@ -44,12 +44,15 @@ const fetchGuideIndex = async (userId: string, searchParams?: Props['searchParam
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
+        Authorization: `Bearer${accessToken}`
       },
       cache: 'no-store'
     });
     if (!response.ok) {
-      throw new Error(`An error occurred: ${response.statusText}`);
+      // エラーレスポンスの詳細を取得してログに記録
+      const errorResponse = await response.json();
+      console.error('Error response:', errorResponse);
+      throw new Error(`An error occurred: ${response.statusText}. Details: ${JSON.stringify(errorResponse)}`);
     }
     return await response.json();
   } catch (error) {

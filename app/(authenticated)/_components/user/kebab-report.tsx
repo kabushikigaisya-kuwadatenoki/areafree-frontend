@@ -60,7 +60,6 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
         body: JSON.stringify({ guide: guideId }),
       };
       const response = await apiRequestWithRefresh(endpoint, options);
-      console.log(response)
       if (response?.ok) {
         // 成功時の処理
         const result = await response.json();
