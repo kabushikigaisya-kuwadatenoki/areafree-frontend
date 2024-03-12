@@ -19,10 +19,12 @@ type Guide = {
 
 type Props = {
   guides: Guide | Guide[]
+  user_id: string
 }
 
-export function GuideCardDetail({ guides }: Props) {
+export function GuideCardDetail({ guides, user_id }: Props) {
   const guidesArray = Array.isArray(guides) ? guides : [guides]
+
   return (
     <>
       {guidesArray.map((item) => (
@@ -38,7 +40,7 @@ export function GuideCardDetail({ guides }: Props) {
                 <Text size="md" fw={700} mb="sm">
                   {item.guide_nickname}
                 </Text>
-                <Link href={`${item.id}/evaluation`}>
+                <Link href={`/user/${user_id}/guide/${item.id}/evaluation`}>
                   <IconStar fontWeight={100} width={16} height={16} />
                 </Link>
               </Group>

@@ -31,7 +31,6 @@ export function EvaluationModal({ nickname, guideId }: { nickname: string; guide
       }
 
       const response = await apiRequestWithRefresh(endpoint, options)
-
       if (response?.ok) {
         notifications.show({
           message: `${nickname}を評価しました！`,

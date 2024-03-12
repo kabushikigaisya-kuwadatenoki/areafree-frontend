@@ -1,20 +1,24 @@
-
-
 import { EvaluationModal } from '@/app/(authenticated)/_components/user/evaluation-modal'
 import { GuideCardDetail } from '@/app/(authenticated)/_components/user/guide-card-detail'
 import { KebabReport } from '@/app/(authenticated)/_components/user/kebab-report'
 import { Stack } from '@mantine/core'
+import { cookies } from "next/headers"
 
 export default async function Page({ params }: { params: { guide_id: string, user_id: string } }) {
+
+  const cookieStore = cookies()
+  const accessToken = cookieStore.get("accessToken")
+
   const fetchGuideDetail = async (guide_id: string) => {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/detail/${guide_id}/`;
-
     try {
       const response = await fetch(endpoint, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer${accessToken}`
         },
+        cache: 'no-store'
       });
       if (!response.ok) {
         throw new Error(`An error occurred: ${response.statusText}`);
@@ -32,7 +36,7 @@ export default async function Page({ params }: { params: { guide_id: string, use
     <>
       <EvaluationModal nickname={guide.guide_nickname} guideId={guide.id} />
       <Stack justify="center" align="center" gap={0} mt="sm">
-        <GuideCardDetail guides={guide} />
+        <GuideCardDetail guides={guide} user_id={params.user_id} />
         <KebabReport userId={params.user_id} nickname={guide.guide_nickname} guideId={guide.id} />
       </Stack>
     </>
