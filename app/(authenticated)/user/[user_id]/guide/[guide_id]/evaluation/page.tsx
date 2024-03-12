@@ -33,7 +33,6 @@ export default async function Page({ params, searchParams }: { params: { user_id
   const fetchReviews = async () => {
     const queryParam = searchParams.sort ? `&sort=${searchParams.sort}` : '';
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reviews/?guide_id=${params.guide_id}${queryParam}`;
-    console.log(endpoint)
     try {
       const response = await fetch(endpoint, {
         method: 'GET',
