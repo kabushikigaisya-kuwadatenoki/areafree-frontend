@@ -14,7 +14,6 @@ export function UserTabs({ indexGuideComponents, searchMapComponents }: Props) {
         <Tabs.Tab value="indexGuide">ガイド一覧</Tabs.Tab>
         <Tabs.Tab value="searchMap">地図検索</Tabs.Tab>
       </Tabs.List>
-
       <Tabs.Panel value="indexGuide">{indexGuideComponents}</Tabs.Panel>
       <Tabs.Panel value="searchMap">{searchMapComponents}</Tabs.Panel>
     </Tabs>

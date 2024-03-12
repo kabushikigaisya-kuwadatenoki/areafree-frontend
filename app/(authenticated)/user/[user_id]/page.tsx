@@ -67,10 +67,6 @@ const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) =
   const guides = await fetchGuideIndex(userId, searchParams);
   return (
     <>
-      <Paper bg="#CDE8E2" p="xs">
-        <SearchForm />
-        <DetailFilter />
-      </Paper>
       <Suspense fallback={<LoadingOverlay />}>
         <GuideCard guides={guides} userId={userId} />
       </Suspense>
@@ -84,10 +80,6 @@ const GuideSearchMap = async ({ userId, searchParams }: GuideIndexItemsProps) =>
   const guides = await fetchGuideIndex(userId, searchParams);
   return (
     <>
-      <Paper bg="#CDE8E2" p="xs">
-        <SearchForm />
-        <DetailFilter />
-      </Paper>
       <Group justify='center' mt={12}>
         <Image src={dummy_map} alt='dummy' width={352} height={191} />
       </Group>
@@ -104,6 +96,10 @@ export default async function Page({ params, searchParams }: Props) {
 
   return (
     <>
+      <Paper bg="#CDE8E2" p="xs">
+        <SearchForm />
+        <DetailFilter />
+      </Paper>
       <UserTabs
         indexGuideComponents={<GuideIndexItems userId={user_id} searchParams={searchParams} />}
         searchMapComponents={<GuideSearchMap userId={user_id} searchParams={searchParams} />}
