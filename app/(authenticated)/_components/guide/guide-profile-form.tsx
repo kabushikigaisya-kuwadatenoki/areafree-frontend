@@ -174,8 +174,10 @@ export function GuideProfileForm({ initialValues, guide_id }: Props) {
         console.error('Error Response:', errorData); // エラー内容をログに出力
         throw new Error('Failed to update the guide');
       }
+      notifications.show({
+        message: "ガイド登録情報を変更しました！",
+      });
       const data = await response.json()
-      console.log('Success:', data);
       handleScrollToTop()
     } catch (error: any) {
       console.error(error.message)

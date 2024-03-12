@@ -1,10 +1,14 @@
-import { GuideEvaluationCard } from '@/app/(authenticated)/_components/guide/guide-evaluation-card'
 import { GuidePlanInfo } from '@/app/(authenticated)/_components/guide/guide-plan-info'
 import { GuideProfileForm } from '@/app/(authenticated)/_components/guide/guide-profile-form'
 import { GuideTabs } from '@/app/(authenticated)/_components/guide/guide-tabs'
+import { EvaluateUserCard } from '@/app/(authenticated)/user/[user_id]/guide/[guide_id]/evaluation/_components/evaluate-user-card'
+import { Group, Rating, Text } from '@mantine/core'
+import { cookies } from "next/headers"
 
 
-export default async function Page({ params }: { params: { guide_id: string } }) {
+export default async function Page({ params, searchParams }: { params: { guide_id: string }, searchParams: { sort: string } }) {
+  const cookieStore = cookies()
+  const accessToken = cookieStore.get("accessToken")
   const fetchGuideProfile = async (guide_id: string) => {
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
@@ -12,6 +16,7 @@ export default async function Page({ params }: { params: { guide_id: string } })
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer${accessToken}`
         },
         cache: "no-store"
       }
@@ -22,64 +27,47 @@ export default async function Page({ params }: { params: { guide_id: string } })
     }
   }
 
-  const fetchGuideEvaluation = async (guide_id: string) => {
+  const fetchReviews = async () => {
+    const queryParam = searchParams.sort ? `&sort=${searchParams.sort}` : '';
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reviews/?guide_id=${params.guide_id}${queryParam}`;
     try {
-      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
-      const options: RequestInit = {
-        method: "GET",
+      const response = await fetch(endpoint, {
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
+          Authorization: `Bearer${accessToken}`
         },
-        cache: "no-store"
+        cache: 'no-store'
+      });
+      if (!response.ok) {
+        throw new Error(`An error occurred: ${response.statusText}`);
       }
-      const response = await fetch(endpoint, options)
-      return response.json()
-    } catch (error: any) {
-      console.error(error.message)
+      return await response.json();
+    } catch (error) {
+      console.error('Fetching guide index failed:', error);
+      return {};
     }
+  };
+
+  const EvaluationComponent = () => {
+    return (
+      <>
+        <Group gap={2} maw={328} mx="auto" mt={16}>
+          <Rating value={evaluation} fractions={4} /><Text size="12px">({reviewUsers.length})</Text>
+        </Group>
+        <EvaluateUserCard evaluateUser={reviewUsers} />
+      </>
+    )
   }
 
   const guideProfile = await fetchGuideProfile(params.guide_id)
-  const guideEvaluations = {
-    guide_id: "guide-uuid",
-    user: {
-      user_id: "user-uuid",
-      nickname: "ガイドのニックネーム",
-      profile_image: "/path/to/profile_image.jpg"
-    },
-    support_status: "available",
-    guide_area: "東京",
-    comment: "ガイドからのコメント",
-    introduction: "ガイドの紹介文",
-    evaluation: 2.3,  // ガイドの総評価（Reviewの平均）
-    plan: "none",
-    reviews: [
-      {
-        nickname: "レビュワーA",
-        created_at: "2023-01-01",
-        profile_image: "/user_dummy.png",
-        evaluation: 4,
-        comment: "素晴らしい体験でした。"
-      },
-      {
-        nickname: "レビュワーB",
-        created_at: "2023-02-15",
-        profile_image: "/user_dummy.png",
-        evaluation: 4.5,
-        comment: "とても楽しかったです！"
-      }
-    ]
-  }
-
-  const { reviews, evaluation } = guideEvaluations;
-
-
-
+  const { evaluation } = guideProfile
+  const reviewUsers = await fetchReviews()
   return (
     <>
       <GuideTabs
         profile={<GuideProfileForm initialValues={guideProfile} guide_id={params.guide_id} />}
-        evaluation={<GuideEvaluationCard evaluation={evaluation} guideEvaluate={reviews} />}
+        evaluation={<EvaluationComponent />}
         plans={<GuidePlanInfo />}
       />
     </>
