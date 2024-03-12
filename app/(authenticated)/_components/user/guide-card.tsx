@@ -1,7 +1,9 @@
 'use client'
 import { formatDate } from '@/app/_functions/format-date'
 import { Box, Card, Group, Rating, Text } from '@mantine/core'
+import { notifications } from '@mantine/notifications'
 import { IconStar } from '@tabler/icons-react'
+import Cookies from "js-cookie"
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -24,6 +26,7 @@ type Props = {
 }
 
 export function GuideCard({ guides, userId }: Props) {
+  const accessToken = Cookies.get('accessToken');
   const guidesArray = Array.isArray(guides) ? guides : [guides]
   const router = useRouter()
 
@@ -34,6 +37,38 @@ export function GuideCard({ guides, userId }: Props) {
 
   const handleCardClick = (id: string, userId: string) => {
     router.push(`/user/${userId}/guide/${id}`)
+  }
+
+  const handleFavorite = async (guide_nickname: string, guideId: string) => {
+    try {
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/favorite_guides/`;
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ guide: guideId }),
+      };
+      const response = await fetch(endpoint, options);
+      if (response?.ok) {
+        // 成功時の処理
+        const result = await response.json();
+        console.error(result.message)
+        notifications.show({
+          message: `${guide_nickname}をお気に入り登録しました！`,
+        });
+        router.push(`/user/${userId}`);
+      } else {
+        // エラー時の処理
+        const errorResult = await response?.json();
+        notifications.show({
+          message: errorResult.error,
+        });
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
   }
 
   return (
@@ -54,19 +89,19 @@ export function GuideCard({ guides, userId }: Props) {
           <Group>
             <Image src={guide.profile_image ? guide.profile_image : "/prof-dummy.png"} alt={guide.guide_nickname ? guide.guide_nickname : ""} width={87} height={76} />
             <Box w="60%">
-              <Text size="10px" mb="xs">
+              <Text size="10px">
                 ガイド評価
               </Text>
-              <Rating size="xs" value={guide.evaluation} fractions={4} />
-              <Group>
+              <Rating py={10} pr={5} size="xs" value={guide.evaluation} fractions={4} onClick={(e) => MoveEvaluation(e, userId, guide.id)} />
+              <Group justify='space-between'>
                 <Text size="md" fw={700} mb="sm">
                   {guide.guide_nickname}
                 </Text>
                 <IconStar
                   fontWeight={100}
-                  width={16}
-                  height={16}
-                  onClick={(e) => MoveEvaluation(e, userId, guide.id)}
+                  width={30}
+                  height={30}
+                  onClick={(e) => { e.stopPropagation(); handleFavorite(guide.guide_nickname, guide.id) }}
                 />
               </Group>
               <Group>
