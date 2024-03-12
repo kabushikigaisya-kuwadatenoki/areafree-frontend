@@ -7,20 +7,18 @@ export function DetailFilter() {
   const searchParams = useSearchParams()
   const { replace } = useRouter()
   const pathname = usePathname()
-
   const [gender, setGender] = useState('')
   const [status, setStatus] = useState('')
   const [evaluation, setEvaluation] = useState('')
 
   const updateFilters = useCallback(() => {
     const params = new URLSearchParams(searchParams)
-
     gender ? params.set('gender', gender) : params.delete('gender')
     status ? params.set('support_status', status) : params.delete('support_status')
     evaluation ? params.set('evaluation', evaluation) : params.delete('evaluation')
 
     replace(`${pathname}?${params.toString()}`)
-  }, [gender, status, evaluation, searchParams, replace, pathname])
+  }, [gender, status, evaluation, pathname, searchParams, replace])
 
   useEffect(() => {
     updateFilters()
