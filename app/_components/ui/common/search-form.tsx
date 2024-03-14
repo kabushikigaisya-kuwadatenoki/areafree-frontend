@@ -16,9 +16,9 @@ export function SearchForm() {
     const params = new URLSearchParams(searchParams)
 
     if (term) {
-      params.set('nickname', term)
+      params.set('query', term)
     } else {
-      params.delete('nickname')
+      params.delete('query')
     }
 
     if (favorites) {
