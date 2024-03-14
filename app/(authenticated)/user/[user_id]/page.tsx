@@ -28,16 +28,15 @@ type GuideIndexItemsProps = {
 };
 
 
-
-
-
 const fetchGuideIndex = async (userId: string, searchParams?: Props['searchParams']) => {
   const queryParams = new URLSearchParams(searchParams as any);
   queryParams.append('user_id', userId); // ユーザーIDを追加
   const queryString = queryParams.toString();
 
   const cookieStore = cookies()
-  const accessToken = cookieStore.get("accessToken")
+  const accessTokenObj = cookieStore.get("accessToken");
+  // accessTokenObjから実際のトークン値を取得
+  const accessToken = accessTokenObj ? accessTokenObj.value : null;
 
   const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides${queryString ? `?${queryString}` : '/'}`;
   try {
@@ -45,7 +44,7 @@ const fetchGuideIndex = async (userId: string, searchParams?: Props['searchParam
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer${accessToken}`
+        Authorization: `Bearer ${accessToken}`
       },
       cache: 'no-store'
     });
@@ -65,6 +64,7 @@ const fetchGuideIndex = async (userId: string, searchParams?: Props['searchParam
 
 const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) => {
   const guides = await fetchGuideIndex(userId, searchParams);
+  console.log(guides)
   return (
     <>
       <Suspense fallback={<LoadingOverlay />}>
