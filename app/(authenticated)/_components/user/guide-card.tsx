@@ -17,7 +17,7 @@ type Guide = {
   comment: string
   profile_image: string
   address: string
-  is_favorite?: boolean
+  favorite_id?: string | null
 }
 
 type Props = {
@@ -70,6 +70,35 @@ export function GuideCard({ guides, userId }: Props) {
       console.log(error.message);
     }
   }
+  const handleUnFavorite = async (guide_nickname: string, favorite_id: string) => {
+    try {
+      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/favorite_guides/${favorite_id}/`;
+      const options = {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store" as RequestCache
+      };
+
+      const response = await fetch(endpoint, options);
+      if (response?.ok) {
+        notifications.show({
+          message: `${guide_nickname}をお気に入り解除しました！`,
+        });
+        router.push(`/user/${userId}`);
+      } else {
+        // エラー時の処理
+        const errorResult = await response?.json();
+        notifications.show({
+          message: errorResult.error,
+        });
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -97,12 +126,22 @@ export function GuideCard({ guides, userId }: Props) {
                 <Text size="md" fw={700} mb="sm">
                   {guide.guide_nickname}
                 </Text>
-                <IconStar
-                  fontWeight={100}
-                  width={30}
-                  height={30}
-                  onClick={(e) => { e.stopPropagation(); handleFavorite(guide.guide_nickname, guide.id) }}
-                />
+                {guide.favorite_id ? (
+                  <IconStar
+                    fontWeight={100}
+                    width={30}
+                    height={30}
+                    onClick={(e) => { e.stopPropagation(); guide.favorite_id && handleUnFavorite(guide.guide_nickname, guide.favorite_id) }}
+                    fill='red'
+                  />
+                ) : (
+                  <IconStar
+                    fontWeight={100}
+                    width={30}
+                    height={30}
+                    onClick={(e) => { e.stopPropagation(); handleFavorite(guide.guide_nickname, guide.id) }}
+                  />
+                )}
               </Group>
               <Group>
                 <Box>

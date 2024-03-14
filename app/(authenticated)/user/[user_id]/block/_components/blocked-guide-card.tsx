@@ -43,7 +43,7 @@ export function BlockedGuideCard({ guides }: Props) {
     router.push(`/guide/${id}/evaluation`)
   }
 
-  async function handleDelete(id: string, user: string, nickname: string) {
+  async function handleDelete(id: string, nickname: string) {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/${id}/`
     const accessToken = Cookies.get("accessToken")
     try {
@@ -82,7 +82,7 @@ export function BlockedGuideCard({ guides }: Props) {
           style={{ cursor: 'pointer', position: 'relative' }}
           key={item.id}
         >
-          <Button style={{ position: 'absolute', right: '16px' }} display="inline" bg="red" onClick={() => { handleDelete(item.id, item.user, item.nickname) }}>
+          <Button style={{ position: 'absolute', right: '16px' }} display="inline" bg="red" onClick={() => { handleDelete(item.id, item.nickname) }}>
             解除
           </Button>
           <Group>
