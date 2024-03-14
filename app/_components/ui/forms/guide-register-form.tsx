@@ -44,7 +44,7 @@ export function GuideRegisterForm() {
         throw new Error(errorData.detail || 'ガイド情報の登録に失敗しました。');
       }
 
-      router.push("/guide/register/complete")
+      router.push("/guide/register/plan")
     } catch (error: any) {
       console.error(error.message);
       setResponseError(error.message);
