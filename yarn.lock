@@ -431,6 +431,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stripe/stripe-js@npm:^3.0.8":
+  version: 3.0.8
+  resolution: "@stripe/stripe-js@npm:3.0.8"
+  checksum: 06251255a55c572cc4bd502a5bd994596cfe89bf7e5b63c1b4e7bab265d687cb1fda81e05cba44ece8b2eb73e81d8a4496497602aa85e66af63e9e8b895d6872
+  languageName: node
+  linkType: hard
+
 "@swc/helpers@npm:0.5.2":
   version: 0.5.2
   resolution: "@swc/helpers@npm:0.5.2"
@@ -2339,6 +2346,7 @@ __metadata:
     "@mantine/form": "npm:^7.5.3"
     "@mantine/hooks": "npm:^7.6.1"
     "@mantine/notifications": "npm:^7.6.1"
+    "@stripe/stripe-js": "npm:^3.0.8"
     "@tabler/icons-react": "npm:^2.47.0"
     "@types/js-cookie": "npm:^3"
     "@types/node": "npm:20.8.10"
