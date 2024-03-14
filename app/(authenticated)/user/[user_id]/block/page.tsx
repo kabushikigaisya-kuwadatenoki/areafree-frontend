@@ -7,9 +7,9 @@ export default async function Page({ params }: { params: { user_id: string } }) 
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/`
     const cookieStore = cookies()
     const accessTokenObj = cookieStore.get("accessToken");
-
     // accessTokenObjから実際のトークン値を取得
     const accessToken = accessTokenObj ? accessTokenObj.value : null;
+
     try {
       const response = await fetch(endpoint, {
         method: 'GET',
@@ -33,6 +33,7 @@ export default async function Page({ params }: { params: { user_id: string } }) 
   }
 
   const bloked_guide = await fetchBlockedGuide()
+  console.log(bloked_guide)
   return (
     <>
       <BreadBrumbs text="ブロックリスト" link={`/user/${params.user_id}`} />
