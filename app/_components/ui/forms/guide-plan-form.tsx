@@ -29,7 +29,7 @@ export function GuidePlanForm() {
       case 'premium':
         return 'price_1OeqnqGPLvjSIBB7dIx9jQOd';
       default:
-        return ''; // 利用しない場合は空文字を返す
+        return '';
     }
   };
 

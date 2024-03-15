@@ -29,6 +29,6 @@ export function CustomerPortal() {
   }
 
   return (
-    <Button onClick={handleAccessCustomerPortal}>プランを変更する</Button>
+    <Button maw={357} mx="auto" fullWidth variant='fill' onClick={handleAccessCustomerPortal}>プラン変更・キャンセルはこちら</Button>
   )
 }

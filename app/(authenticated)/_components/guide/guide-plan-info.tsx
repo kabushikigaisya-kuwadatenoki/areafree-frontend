@@ -1,8 +1,8 @@
 "use client"
-import { Button, Group, Modal, Paper, Stack, Table, TableData, Text } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
+import { CustomerPortal } from '@/app/(authenticated)/user/_component/customer-portal'
+import { Group, Paper, Stack, Table, TableData, Text } from '@mantine/core'
+
 import Image from "next/image"
-import Link from "next/link"
 
 const InfoImage = "/plan-info.png"
 
@@ -15,27 +15,9 @@ const tableData: TableData = {
 }
 
 export function GuidePlanInfo() {
-  const [opened, { open, close }] = useDisclosure()
   return (
     <>
-      <Modal opened={opened} onClose={close}>
-        <Paper p={15} withBorder maw={357} mx="auto">
-          <Group justify='center'>
-            <Text size='md' fw={700}>{"プラン名"}を退会しますか？</Text>
-            <Text size='xs'>
-              退会すると、プラン利用なしのガイドとなります。
-            </Text>
-            <Text size='xs'>
-              また、現状のプランに紐づくすべての情報は破棄され、復旧できません。
-            </Text>
-          </Group>
-        </Paper>
-        <Group justify='flex-end' mt={10}>
-          <Button variant='outline' onClick={close}>キャンセル</Button>
-          <Button variant='fill' bg="red">退会</Button>
-        </Group>
-      </Modal>
-      <Paper style={{ position: "relative" }}>
+      <Paper style={{ position: "relative" }} maw={357} mx="auto">
         <Image alt='PlanInfo' src={InfoImage} width={280} height={155} />
         <Stack gap={5} w={196} justify='center' style={{ position: "absolute", right: 0, top: 0, bottom: 0, margin: "auto 0" }}>
           <Text size='sm'>あなたは</Text>
@@ -54,9 +36,7 @@ export function GuidePlanInfo() {
           <Text size='md'>円</Text>
         </Group>
       </Group>
-      <Button maw={357} mx="auto" fullWidth variant='fill'>プラン変更はこちら</Button>
-      <Text p={10} ta="right" size='xs' c="blue">お支払情報変更</Text>
-      <Text p={10} ta="right" size='xs' c="red" onClick={open}>プランを退会する</Text>
+      <CustomerPortal />
       <Paper maw={357} mx="auto" shadow="sm" p={5} mt={32}>
         <Table data={tableData} style={{ fontSize: '10px' }} />
       </Paper>
