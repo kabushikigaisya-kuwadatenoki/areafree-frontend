@@ -4,6 +4,7 @@ import { Button, Checkbox, Group, PasswordInput, Text, TextInput } from '@mantin
 import { useForm } from '@mantine/form'
 import { notifications } from '@mantine/notifications'
 import Cookies from "js-cookie"
+import jwt from "jsonwebtoken"
 import Link from 'next/link'
 import { useRouter } from "next/navigation"
 import { useState } from 'react'
@@ -47,9 +48,17 @@ export function LoginForm() {
       const data = await response.json();
       Cookies.set('accessToken', data.access, { expires: 2 });
       Cookies.set('refreshToken', data.refresh, { expires: 7 });
-      const userId = data.user_id;
 
-      router.push(`/user/${userId}`)
+      const decoded = jwt.decode(data.access);
+      if (decoded && typeof decoded !== 'string') {
+        if (decoded.is_admin === true) {
+          router.push("/admin");
+        } else if (decoded.guide_id) {
+          router.push(`/guide/${decoded.guide_id}`);
+        } else if (decoded.user_id) {
+          router.push(`/user/${decoded.user_id}`);
+        }
+      }
 
     } catch (error) {
       console.error(error)
