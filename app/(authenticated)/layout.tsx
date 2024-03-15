@@ -14,8 +14,8 @@ export default function Layout({ children }: Props) {
 
   if (!accessToken) {
     redirect("/login")
+    return;
   }
-
 
   return (
     <>

@@ -3,7 +3,7 @@
 import { Flex, Paper, Text } from '@mantine/core'
 import { IconLogout, IconUserCircle } from '@tabler/icons-react'
 import Cookies from 'js-cookie'
-import { jwtDecode } from 'jwt-decode';
+import jwt from 'jsonwebtoken';
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from "next/navigation"
@@ -27,7 +27,7 @@ export function AuthedHeader() {
   useEffect(() => {
     const accessToken = Cookies.get("accessToken");
     if (accessToken) {
-      const decodedToken = jwtDecode(accessToken) as { user_id: string, guide_id: string };
+      const decodedToken = jwt.decode(accessToken) as { user_id: string, guide_id: string };
       setUserId(decodedToken.user_id);
       setGuideId(decodedToken.guide_id);
     }
