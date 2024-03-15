@@ -12,6 +12,11 @@ type Props = {
   children: React.ReactNode;
 }
 
+type DecodedToken = {
+  user_id: string
+  is_admin: boolean
+}
+
 
 export default function Layout({ children }: Props) {
   const cookieStore = cookies()
@@ -19,9 +24,9 @@ export default function Layout({ children }: Props) {
 
   if (accessToken) {
     try {
-      const decoded = jwt.decode(accessToken.value);
-      if (typeof decoded !== 'object' || decoded === null || !('is_admin' in decoded) || decoded.is_admin === false) {
-        redirect('/login');
+      const decoded = jwt.decode(accessToken.value) as DecodedToken;
+      if (decoded.is_admin === false) {
+        redirect("/login");
       }
     } catch (error) {
       console.error("Error decoding the token: ", error);

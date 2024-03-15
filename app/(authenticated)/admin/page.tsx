@@ -106,23 +106,6 @@ export default function Page() {
     },
   ]
 
-  const notifications_dummy = [
-    {
-      id: 'hogehuga123',
-      title: '利用規約が改訂されました。',
-      created_at: '2024-02-22T15:00:00Z',
-    },
-    {
-      id: 'hogehuga124',
-      title: '利用規約が改訂されました。',
-      created_at: '2024-02-22T15:00:00Z',
-    },
-    {
-      id: 'hogehuga125',
-      title: '利用規約が改訂されました。',
-      created_at: '2024-02-22T15:00:00Z',
-    },
-  ]
 
   const ReportComponent = () => {
     return (
