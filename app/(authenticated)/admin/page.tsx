@@ -143,19 +143,19 @@ export default function Page() {
     )
   }
 
-  const NoticeComponent = () => {
-    return (
-      <>
-        <NotificationList notices={notifications_dummy} />
-      </>
-    )
-  }
+  // const NoticeComponent = () => {
+  //   return (
+  //     <>
+  //       <NotificationList notices={notifications_dummy} />
+  //     </>
+  //   )
+  // }
 
   return (
     <>
       <AdminTabs
         indexReportComponents={<ReportComponent />}
-        indexNoticeComponents={<NoticeComponent />}
+      // indexNoticeComponents={<NoticeComponent />}
       />
     </>
   )
