@@ -8,7 +8,10 @@ import { cookies } from "next/headers"
 
 export default async function Page({ params, searchParams }: { params: { guide_id: string }, searchParams: { sort: string } }) {
   const cookieStore = cookies()
-  const accessToken = cookieStore.get("accessToken")
+  const accessTokenObj = cookieStore.get("accessToken");
+  // accessTokenObjから実際のトークン値を取得
+  const accessToken = accessTokenObj ? accessTokenObj.value : null;
+
   const fetchGuideProfile = async (guide_id: string) => {
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
@@ -16,7 +19,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer${accessToken}`
+          Authorization: `Bearer ${accessToken}`
         },
         cache: "no-store"
       }
@@ -35,7 +38,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer${accessToken}`
+          Authorization: `Bearer ${accessToken}`
         },
         cache: 'no-store'
       });
@@ -48,6 +51,24 @@ export default async function Page({ params, searchParams }: { params: { guide_i
       return {};
     }
   };
+
+  const fetchPlans = async () => {
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/user-plan`;
+    try {
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+        cache: 'no-store'
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Fetching guide index failed:', error);
+      return {};
+    }
+  }
 
   const EvaluationComponent = () => {
     return (
@@ -63,12 +84,13 @@ export default async function Page({ params, searchParams }: { params: { guide_i
   const guideProfile = await fetchGuideProfile(params.guide_id)
   const { evaluation } = guideProfile
   const reviewUsers = await fetchReviews()
+  const plan = await fetchPlans()
   return (
     <>
       <GuideTabs
         profile={<GuideProfileForm initialValues={guideProfile} guide_id={params.guide_id} />}
         evaluation={<EvaluationComponent />}
-        plans={<GuidePlanInfo />}
+        plans={<GuidePlanInfo plan={plan.current_plan} />}
       />
     </>
   )

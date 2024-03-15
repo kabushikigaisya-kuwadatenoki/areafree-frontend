@@ -14,14 +14,31 @@ const tableData: TableData = {
   ],
 }
 
-export function GuidePlanInfo() {
+const getPlanPrice = (plan: string) => {
+  switch (plan) {
+    case 'ライトプラン':
+      return '1000';
+    case 'スタンダードプラン':
+      return '3000';
+    case 'プレミアムプラン':
+      return '6000';
+    default:
+      return '0';
+  }
+}
+
+type Props = {
+  plan?: string
+}
+
+export function GuidePlanInfo({ plan }: Props) {
   return (
     <>
       <Paper style={{ position: "relative" }} maw={357} mx="auto">
         <Image alt='PlanInfo' src={InfoImage} width={280} height={155} />
-        <Stack gap={5} w={196} justify='center' style={{ position: "absolute", right: 0, top: 0, bottom: 0, margin: "auto 0" }}>
+        <Stack gap={5} w={200} justify='center' style={{ position: "absolute", right: 0, top: 0, bottom: 0, margin: "auto 0" }}>
           <Text size='sm'>あなたは</Text>
-          <Text size="20px" ta="center" fw={700}>ライト会員</Text>
+          <Text size="20px" ta="center" fw={700}>{plan ? plan : "フリープラン"}</Text>
           <Text size='sm' ta="right">です。</Text>
         </Stack>
       </Paper >
@@ -31,7 +48,7 @@ export function GuidePlanInfo() {
         </Text>
         <Group>
           <Text size='32px' fw={700}>
-            1000円
+            {plan ? getPlanPrice(plan) : "0"}
           </Text>
           <Text size='md'>円</Text>
         </Group>
