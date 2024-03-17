@@ -1,8 +1,9 @@
+// /reviews/[guide_id]/route.ts
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function GET(request: Request, { params }: { params: { guide_id: string } }) {
+  const { guide_id } = params
   const { searchParams } = new URL(request.url)
-  const guide_id = searchParams.get('guide_id') || ''
   const sort = searchParams.get('sort') || ''
   const accessToken = request.headers.get('Authorization')?.replace('Bearer ', '')
 
