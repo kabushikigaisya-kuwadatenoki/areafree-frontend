@@ -1,6 +1,7 @@
 'use client'
 import { AdminUserCard } from '@/app/(authenticated)/_components/admin/admin-user-card'
 import { ExtendedGuideNotificationType } from '@/app/(authenticated)/_type/type'
+import { formatDate } from '@/app/_functions/format-date'
 import {
   Badge,
   Box,
@@ -104,7 +105,7 @@ export function AdminGuideCard({ guides }: Props) {
                   <Box>
                     <Text size="10px">ガイド歴</Text>
                     <Text size="10px" mt="5px">
-                      {item.created_at}
+                      {formatDate(item.created_at)}
                     </Text>
                   </Box>
                   <Group>
