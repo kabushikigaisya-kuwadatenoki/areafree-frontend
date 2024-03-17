@@ -60,7 +60,6 @@ export function BlockedGuideCard({ guides }: Props) {
         notifications.show({
           message: `${nickname}のブロックを解除しました`,
         });
-        close()
       }
     } catch (error: any) {
       console.error(error.message);
