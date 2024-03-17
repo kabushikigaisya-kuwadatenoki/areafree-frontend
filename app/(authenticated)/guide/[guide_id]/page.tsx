@@ -14,7 +14,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
 
   const fetchGuideProfile = async (guide_id: string) => {
     try {
-      const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides/${guide_id}/`
+      const endpoint = `http://localhost:8000/api/v1/guides/${guide_id}/`
       const options: RequestInit = {
         method: "GET",
         headers: {
@@ -36,7 +36,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
 
   const fetchReviews = async () => {
     const queryParam = searchParams.sort ? `&sort=${searchParams.sort}` : '';
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reviews/?guide_id=${params.guide_id}${queryParam}`;
+    const endpoint = `http://localhost:8000/api/v1/reviews/?guide_id=${params.guide_id}${queryParam}`;
     try {
       const response = await fetch(endpoint, {
         method: 'GET',
@@ -57,7 +57,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
   };
 
   const fetchPlans = async () => {
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/user-plan/`;
+    const endpoint = "http://localhost:8000/api/v1/user-plan/";
     try {
       const response = await fetch(endpoint, {
         method: 'GET',
