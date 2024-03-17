@@ -26,8 +26,9 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
     },
   })
 
-  const accessToken = Cookies.get("accessToken")
+
   const handleReport = async (nickname: string) => {
+    const accessToken = Cookies.get("accessToken")
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reports/`
       const options = {
@@ -40,10 +41,19 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
       }
       const response = await apiRequestWithRefresh(endpoint, options)
       if (response?.ok) {
+        console.log(options.body);
         notifications.show({
           message: `${nickname}を通報しました！`,
-        })
-        close()
+          color: 'green', // 成功通知は緑色で表示
+        });
+        close();
+      } else if (response?.status === 400) {
+        // バックエンドからのエラーメッセージを取得して表示
+        const errorData = await response.json();
+        notifications.show({
+          message: errorData.error || '通報に失敗しました。',
+          color: 'red', // エラー通知は赤色で表示
+        });
       }
     } catch (error: any) {
       console.log(error.message)
@@ -51,6 +61,7 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
   }
 
   const handleBlock = async () => {
+    const accessToken = Cookies.get("accessToken")
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/blocked_guides/`;
       const options = {
