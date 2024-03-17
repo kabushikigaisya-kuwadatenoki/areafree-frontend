@@ -43,9 +43,6 @@ export default async function Page({ params, searchParams }: { params: { guide_i
     )
   }
 
-
-  console.log(guideData)
-
   return (
     <>
       <GuideTabs
