@@ -12,6 +12,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
 
   const guideRes = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND_ENDPOINT}/api/guide/${params.guide_id}`, {
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
   });
@@ -19,6 +20,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
 
   const reviewsRes = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND_ENDPOINT}/api/reviews?guide_id=${params.guide_id}&sort=${searchParams.sort}`, {
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
   });
@@ -26,6 +28,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
 
   const plansRes = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND_ENDPOINT}/api/plans`, {
     headers: {
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
   });
