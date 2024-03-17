@@ -28,5 +28,5 @@ export type UserNotificationType = {
 }
 
 export type ExtendedGuideNotificationType = GuideNotificationType & {
-  reportedUsers: UserNotificationType[]
+  user_ditails: UserNotificationType[]
 }
