@@ -40,7 +40,7 @@ export function AuthedHeader() {
         </Link>
         <Flex gap="sm" align="center">
           {guideId ? (
-            <Link href={`/guide/${guideId}`}>
+            <Link href={`/guide/${guideId}/`}>
               <Text size="10px" c="blue">ガイドダッシュボード</Text>
             </Link>
           ) : (
@@ -48,7 +48,7 @@ export function AuthedHeader() {
               <Text size="10px" c="blue">ガイドになる</Text>
             </Link>
           )}
-          <Link href={`/user/${userId}/profile`}>
+          <Link href={`/user/${userId}/profile/`}>
             <IconUserCircle size={24} strokeWidth={2} color={'#555555'} />
           </Link>
           <IconLogout onClick={() => { logout() }} size={24} strokeWidth={2} color="#A0AEC0" />

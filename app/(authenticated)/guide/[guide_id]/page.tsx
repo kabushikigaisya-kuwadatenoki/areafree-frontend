@@ -23,10 +23,14 @@ export default async function Page({ params, searchParams }: { params: { guide_i
         },
         cache: "no-store"
       }
-      const response = await fetch(endpoint, options)
-      return response.json()
+      const response = await fetch(endpoint, options);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     } catch (error: any) {
       console.error(error.message)
+      throw error;
     }
   }
 
@@ -53,7 +57,7 @@ export default async function Page({ params, searchParams }: { params: { guide_i
   };
 
   const fetchPlans = async () => {
-    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/user-plan`;
+    const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/user-plan/`;
     try {
       const response = await fetch(endpoint, {
         method: 'GET',
@@ -74,15 +78,16 @@ export default async function Page({ params, searchParams }: { params: { guide_i
     return (
       <>
         <Group gap={2} maw={328} mx="auto" mt={16}>
-          <Rating value={evaluation} fractions={4} /><Text size="12px">({reviewUsers.length})</Text>
+          <Rating value={evaluation} fractions={4} />
+          <Text size="12px">({reviewUsers?.length ?? 0})</Text>
         </Group>
-        <EvaluateUserCard evaluateUser={reviewUsers} />
+        {reviewUsers && <EvaluateUserCard evaluateUser={reviewUsers} />}
       </>
     )
   }
 
   const guideProfile = await fetchGuideProfile(params.guide_id)
-  const { evaluation } = guideProfile
+  const evaluation = guideProfile.evaluation
   const reviewUsers = await fetchReviews()
   const plan = await fetchPlans()
   return (

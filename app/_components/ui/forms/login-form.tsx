@@ -54,9 +54,9 @@ export function LoginForm() {
         if (decoded.is_admin === true) {
           router.push("/admin");
         } else if (decoded.guide_id) {
-          router.push(`/guide/${decoded.guide_id}`);
+          router.push(`/guide/${decoded.guide_id}/`);
         } else if (decoded.user_id) {
-          router.push(`/user/${decoded.user_id}`);
+          router.push(`/user/${decoded.user_id}/`);
         }
       }
 
