@@ -35,7 +35,6 @@ const fetchGuideIndex = async (userId: string, searchParams?: Props['searchParam
 
   const cookieStore = cookies()
   const accessTokenObj = cookieStore.get("accessToken");
-  // accessTokenObjから実際のトークン値を取得
   const accessToken = accessTokenObj ? accessTokenObj.value : null;
 
   const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/guides${queryString ? `?${queryString}` : '/'}`;
