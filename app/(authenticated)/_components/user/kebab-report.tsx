@@ -27,7 +27,7 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
   })
 
   const accessToken = Cookies.get("accessToken")
-  const handleReport = async () => {
+  const handleReport = async (nickname: string) => {
     try {
       const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/reports/`
       const options = {
@@ -39,8 +39,10 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
         body: JSON.stringify({ ...form.values, guide: guideId }),
       }
       const response = await apiRequestWithRefresh(endpoint, options)
-
       if (response?.ok) {
+        notifications.show({
+          message: `${nickname}を通報しました！`,
+        })
         close()
       }
     } catch (error: any) {
@@ -61,8 +63,6 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
       };
       const response = await apiRequestWithRefresh(endpoint, options);
       if (response?.ok) {
-        // 成功時の処理
-        const result = await response.json();
         notifications.show({
           message: `${nickname}をブロックしました！`,
         });
@@ -82,7 +82,7 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
   return (
     <>
       <Modal opened={opened} onClose={close} title="通報">
-        <form onSubmit={form.onSubmit(handleReport)}>
+        <form onSubmit={form.onSubmit(() => handleReport(nickname))}>
           <TextInput label="通報対象者" value={nickname} disabled />
           <NativeSelect
             label="通報理由"
