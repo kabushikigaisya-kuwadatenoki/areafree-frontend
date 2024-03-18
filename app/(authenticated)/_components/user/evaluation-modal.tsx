@@ -5,9 +5,11 @@ import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { notifications } from '@mantine/notifications'
 import Cookies from 'js-cookie'
+import { useRouter } from "next/navigation"
 
 export function EvaluationModal({ nickname, guideId }: { nickname: string; guideId: string }) {
   const [opened, { open, close }] = useDisclosure(false)
+  const router = useRouter();
   const form = useForm({
     initialValues: {
       evaluation: 0,
@@ -35,6 +37,7 @@ export function EvaluationModal({ nickname, guideId }: { nickname: string; guide
         notifications.show({
           message: `${nickname}を評価しました！`,
         });
+        router.refresh();
         close() // モーダルを閉じる
       } else {
         // エラーレスポンスの処理

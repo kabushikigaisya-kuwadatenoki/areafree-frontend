@@ -53,11 +53,10 @@ export function GuideCard({ guides, userId }: Props) {
       const response = await fetch(endpoint, options);
       if (response?.ok) {
         // 成功時の処理
-        const result = await response.json();
-        console.error(result.message)
         notifications.show({
           message: `${guide_nickname}をお気に入り登録しました！`,
         });
+        router.refresh();
         router.push(`/user/${userId}`);
       } else {
         // エラー時の処理
@@ -87,6 +86,7 @@ export function GuideCard({ guides, userId }: Props) {
         notifications.show({
           message: `${guide_nickname}をお気に入り解除しました！`,
         });
+        router.refresh();
         router.push(`/user/${userId}`);
       } else {
         // エラー時の処理
@@ -99,6 +99,7 @@ export function GuideCard({ guides, userId }: Props) {
       console.log(error);
     }
   }
+  console.log(guides)
 
   return (
     <>

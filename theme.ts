@@ -22,6 +22,14 @@ export const theme = createTheme({
         border: 'unset',
       },
     },
+    TextInput: {
+      styles: {
+        input: {
+          opacity: 1,
+          color: '#555',
+        },
+      },
+    },
   },
   primaryColor: 'primary',
   colors: {
