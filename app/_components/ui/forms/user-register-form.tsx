@@ -17,6 +17,23 @@ import React from 'react'
 import { useState } from 'react'
 
 
+type FormValues = {
+  profile_image: File | null;
+  profile_image_preview: string;
+  first_name: string;
+  first_name_kana: string;
+  last_name: string;
+  last_name_kana: string;
+  nickname: string;
+  gender: string;
+  birthday: string;
+  available_languages: string[];
+  phone_number: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 export function UserRegisterForm() {
   const ProfileUpload = '/profileUpload.svg'
   const [registerStatus, setRegisterStatus] = useState('register')
@@ -26,8 +43,9 @@ export function UserRegisterForm() {
   const router = useRouter()
   const pathname = usePathname()
 
-  const defaultValues = {
-    profile_image: ProfileUpload,
+  const defaultValues: FormValues = {
+    profile_image: null,
+    profile_image_preview: ProfileUpload,
     first_name: '',
     first_name_kana: '',
     last_name: '',
@@ -40,7 +58,7 @@ export function UserRegisterForm() {
     email: '',
     password: '',
     confirmPassword: '',
-  }
+  };
 
   const form = useForm({
     initialValues: defaultValues,
@@ -111,39 +129,74 @@ export function UserRegisterForm() {
 
   async function handleSubmit() {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/register/`;
+
     try {
+      // その他のフォームデータを送信
       const response = await fetch(endpoint, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(form.values),
-      })
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        // レスポンスからエラーメッセージを取得してセット
-        setResponseError(data.email ? data.email[0] : '登録に失敗しました。');
-        return;  // ここで処理を終了
+        // より具体的なエラーメッセージのハンドリング
+        const errorMessage = data.message || (data.email ? data.email[0] : '登録に失敗しました。');
+        setResponseError(`登録エラー: ${errorMessage}`);
+        console.error(`Registration error: ${response.status} ${errorMessage}`);
+        return;
       }
 
-      // 成功時の処理（次のページへの遷移など）
+      const userId = data.user_id;
+
+      // 画像データを送信
+      if (form.values.profile_image instanceof File) {
+        const imageEndpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${userId}/`;
+        const formData = new FormData();
+        formData.append('profile_image', form.values.profile_image);
+
+        const imageResponse = await fetch(imageEndpoint, {
+          method: 'PATCH',
+          body: formData,
+        });
+
+        const imageResponseData = await imageResponse.json();
+
+        if (!imageResponse.ok) {
+          // より詳細なエラーハンドリング
+          const imageErrorMessage = imageResponseData.message || '画像のアップロードに失敗しました。';
+          setResponseError(`画像アップロードエラー: ${imageErrorMessage}`);
+          console.error(`Image upload error: ${imageResponse.status} ${imageErrorMessage}`);
+          return;
+        }
+      }
+
       router.push('/register/temporary');
     } catch (error) {
-      console.error(error);
-      setResponseError('登録中にエラーが発生しました。');
+      if (error instanceof Error) {
+        console.error(`Unhandled error in registration: ${error.message}`);
+        setResponseError(`未処理のエラー: ${error.message}`);
+      } else {
+        // 不明なエラーのハンドリング
+        console.error('An unknown error occurred during registration');
+        setResponseError('登録中に不明なエラーが発生しました。');
+      }
     }
   }
 
   // 画像アップロードハンドラ
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] // オプショナルチェーンを使用してfilesへアクセス
+    const file = event.target.files?.[0];
 
     if (file) {
-      form.setFieldValue('profileImage', URL.createObjectURL(file))
+      form.setFieldValue('profile_image', file);
+      form.setFieldValue('profile_image_preview', URL.createObjectURL(file));
     }
-  }
+  };
+
   return (
     <>
       <Box maw={290} mx="auto">
@@ -168,7 +221,7 @@ export function UserRegisterForm() {
             />
             <label htmlFor="imageUpload">
               <Image
-                src={form.values.profile_image || ProfileUpload}
+                src={form.values.profile_image_preview || ProfileUpload}
                 width="96"
                 height="96"
                 alt="プロフィール画像アップロードボタン"

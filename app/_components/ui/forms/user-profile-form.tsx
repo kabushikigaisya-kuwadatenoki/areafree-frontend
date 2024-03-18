@@ -55,7 +55,7 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
   const router = useRouter()
 
   const defaultValues = {
-    profile_image: '',
+    profile_image: initialValues?.profile_image,
     first_name: '',
     first_name_kana: '',
     last_name: '',
@@ -128,7 +128,7 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
 
     try {
       // axios を使用して PUT リクエストを送信
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`, formData, {
+      const response = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data', // マルチパートフォームデータとして送信
           Authorization: `Bearer ${accessToken}`
@@ -167,6 +167,8 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
 
   async function handleSubmit() {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`
+    const { profile_image, ...userInfoWithoutImage } = form.values; // profile_imageを除外
+
     try {
       const response = await fetch(endpoint, {
         method: "PUT",
@@ -174,7 +176,7 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`
         },
-        body: JSON.stringify(form.values)
+        body: JSON.stringify(userInfoWithoutImage) // 画像を除外したユーザー情報を送信
       })
       if (!response.ok) {
         const errorData = await response.json(); // エラーレスポンスの内容を取得
@@ -191,6 +193,8 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
     }
   }
 
+
+  console.log(form.values)
   async function handleDelete() {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`
     try {
