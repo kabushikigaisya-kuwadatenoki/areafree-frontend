@@ -4,7 +4,8 @@ import { Box, Card, Group, Rating, Text } from '@mantine/core'
 import { IconStar } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
-
+import { useRouter } from "next/navigation"
+import React from "react"
 type Guide = {
   id: string
   guide_nickname: string
@@ -24,6 +25,11 @@ type Props = {
 
 export function GuideCardDetail({ guides, user_id }: Props) {
   const guidesArray = Array.isArray(guides) ? guides : [guides]
+  const router = useRouter();
+  const MoveEvaluation = (e: React.MouseEvent, userId: string, id: string) => {
+    e.stopPropagation()
+    router.push(`/user/${userId}/guide/${id}/evaluation`)
+  }
 
   return (
     <>
@@ -35,7 +41,7 @@ export function GuideCardDetail({ guides, user_id }: Props) {
               <Text size="10px" mb="xs">
                 ガイド評価
               </Text>
-              <Rating size="xs" value={item.evaluation} fractions={4} />
+              <Rating size="xs" value={item.evaluation} fractions={4} onClick={(e) => MoveEvaluation(e, user_id, item.id)} />
               <Group>
                 <Text size="md" fw={700} mb="sm">
                   {item.guide_nickname}
