@@ -87,7 +87,7 @@ export function EvaluateUserCard({ evaluateUser }: Props) {
           <Text size="10px" mt={6}>
             評価
           </Text>
-          <Rating size="xs" value={user.evaluation} fractions={4} mt={8} />
+          <Rating size="md" value={user.evaluation} fractions={4} mt={8} />
           <Text size="10px" mt={6}>
             コメント
           </Text>

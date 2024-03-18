@@ -133,7 +133,7 @@ export function GuideCard({ guides, userId }: Props) {
                     width={30}
                     height={30}
                     onClick={(e) => { e.stopPropagation(); guide.favorite_id && handleUnFavorite(guide.guide_nickname, guide.favorite_id) }}
-                    fill='red'
+                    fill='#EFF330'
                   />
                 ) : (
                   <IconStar
