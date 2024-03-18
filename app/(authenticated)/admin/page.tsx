@@ -1,8 +1,8 @@
 "use server"
 import { AdminGuideCard } from '@/app/(authenticated)/_components/admin/admin-guide-card'
 import { AdminTabs } from '@/app/(authenticated)/_components/admin/admin-tabs'
+import { Text } from "@mantine/core"
 import { cookies } from 'next/headers'
-
 
 type ReportedGuide = {
   id: string;
@@ -32,7 +32,7 @@ export default async function Page() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store"
+        next: { revalidate: 2000 }
       });
       if (!response.ok) {
         const errorResponse = await response.json();
@@ -49,14 +49,21 @@ export default async function Page() {
 
   const ReportComponent = async () => {
     const reports = await fetchReport();
-    console.log(reports)
+
+    if (reports && reports.length > 0) {
+      return (
+        <>
+          {reports.map((report: ReportedGuide) => {
+            return <AdminGuideCard key={report.id} guides={report} />
+          })}
+        </>
+      );
+    }
     return (
-      <>
-        {reports.map((report: ReportedGuide) => {
-          return <AdminGuideCard key={report.id} guides={report} />
-        })}
-      </>
-    )
+      <Text ta="center" mt={16} fw={700}>
+        報告されたガイドはいません
+      </Text>
+    );
   }
 
 

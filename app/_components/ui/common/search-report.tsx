@@ -48,7 +48,7 @@ export function SearchReport() {
               defaultValue={searchParams.get('query')?.toString() || ''}
             />
           </Group>
-          <Button mb={0} size="sm" component={Link} href="/report">
+          <Button mb={0} size="sm" component={Link} href="/admin/frozen">
             凍結一覧
           </Button>
         </Group>
