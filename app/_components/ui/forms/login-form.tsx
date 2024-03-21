@@ -104,7 +104,7 @@ export function LoginForm() {
         <Text component={Link} href="/register" size="xs" c="blue">
           新規登録はこちら
         </Text>
-        <Text component={Link} href="/register" size="xs" c="blue">
+        <Text component={Link} href="/forgot-password" size="xs" c="blue">
           パスワードを忘れた方はこちら
         </Text>
       </Group>

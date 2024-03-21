@@ -183,8 +183,6 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
         console.error('Error Response:', errorData); // エラー内容をログに出力
         throw new Error('Failed to update the guide');
       }
-      const data = await response.json()
-      console.log('Success:', data);
       setCompleteUpdate("complete")
       handleScrollToTop()
     } catch (error: any) {
@@ -194,7 +192,6 @@ export function UserProfileForm({ initialValues, user_id }: Props) {
   }
 
 
-  console.log(form.values)
   async function handleDelete() {
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/users/${user_id}/`
     try {
