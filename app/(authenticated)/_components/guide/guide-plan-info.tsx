@@ -128,9 +128,9 @@ export function GuidePlanInfo({ plan }: Props) {
         </Group>
       </Group>
       {plan !== null ? (
-        <Button variant='fill' fullWidth maw={357} mx="auto" onClick={open}>プランに加入</Button>
-      ) : (
         <CustomerPortal />
+      ) : (
+        <Button variant='fill' fullWidth maw={357} mx="auto" onClick={open}>プランに加入</Button>
       )}
       <Paper maw={357} mx="auto" shadow="sm" p={5} mt={32}>
         <Table data={tableData} style={{ fontSize: '10px' }} />
