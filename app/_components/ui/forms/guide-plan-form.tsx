@@ -23,11 +23,11 @@ export function GuidePlanForm() {
       case 'free':
         return 'price_1OqSnTGPLvjSIBB79Aokf0Lx';
       case 'light':
-        return 'price_1OeqoQGPLvjSIBB7mi9jMyjS';
+        return 'price_1OwevFGPLvjSIBB7Jfz9IyUS';
       case 'standard':
-        return 'price_1Oeqn9GPLvjSIBB7BHVeiD7L';
+        return 'price_1OwexQGPLvjSIBB7bhSo5tby';
       case 'premium':
-        return 'price_1OeqnqGPLvjSIBB7dIx9jQOd';
+        return 'price_1Owey3GPLvjSIBB7B5d3YbaD';
       default:
         return '';
     }
