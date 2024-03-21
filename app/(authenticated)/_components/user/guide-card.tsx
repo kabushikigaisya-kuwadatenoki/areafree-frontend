@@ -99,7 +99,6 @@ export function GuideCard({ guides, userId }: Props) {
       console.log(error);
     }
   }
-  console.log(guides)
 
   return (
     <>

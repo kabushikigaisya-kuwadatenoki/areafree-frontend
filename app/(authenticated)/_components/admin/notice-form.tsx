@@ -27,7 +27,6 @@ export function NoticeForm({ initialValues }: NoticeFormProps) {
   })
 
   const handleSubmit = () => {
-    console.log(form.values)
     router.push('/admin')
   }
   return (

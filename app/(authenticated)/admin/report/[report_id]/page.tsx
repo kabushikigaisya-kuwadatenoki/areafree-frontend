@@ -4,7 +4,6 @@ import { Container, Title } from '@mantine/core';
 import { cookies } from 'next/headers';
 export default async function Page({ params }: { params: { report_id: string } }) {
   const report = await fetchReportData(params.report_id);
-  console.log(report)
   return (
     <Container mt={16}>
       <Title fw={700} order={2} mb="md">

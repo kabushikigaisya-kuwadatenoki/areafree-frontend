@@ -63,7 +63,7 @@ const fetchGuideIndex = async (userId: string, searchParams?: Props['searchParam
 
 const GuideIndexItems = async ({ userId, searchParams }: GuideIndexItemsProps) => {
   const guides = await fetchGuideIndex(userId, searchParams);
-  console.log(guides)
+
   return (
     <>
       <Suspense fallback={<LoadingOverlay />}>
