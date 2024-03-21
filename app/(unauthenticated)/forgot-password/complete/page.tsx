@@ -1,6 +1,5 @@
 import { ComponentWrapper } from '@/app/_components/ui/common/component-wrapper'
-import { Group, Text } from '@mantine/core'
-import Link from 'next/link'
+import { Text } from '@mantine/core'
 
 export default function Page() {
   return (
@@ -21,11 +20,6 @@ export default function Page() {
           <br />
           行ってください。
         </Text>
-        <Group justify="center">
-          <Text component={Link} href="/login" size="xs" c="blue">
-            ログインはこちら
-          </Text>
-        </Group>
       </ComponentWrapper>
     </>
   )

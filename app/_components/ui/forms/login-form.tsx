@@ -12,6 +12,7 @@ import { useState } from 'react'
 
 export function LoginForm() {
   const [confirmed, setConfirmed] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const form = useForm({
     initialValues: {
@@ -27,6 +28,7 @@ export function LoginForm() {
     },
   })
   const handleSubmit = async () => {
+    setLoading(true)
     const endpoint = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/login/`
     try {
       const response = await fetch(endpoint, {
@@ -63,6 +65,8 @@ export function LoginForm() {
     } catch (error) {
       console.error(error)
     }
+
+    setLoading(false)
   }
 
   return (
@@ -95,7 +99,7 @@ export function LoginForm() {
           onChange={(event) => setConfirmed(event.currentTarget.checked)}
         />
         <Group justify="center">
-          <Button type="submit" disabled={confirmed !== true}>
+          <Button type="submit" disabled={confirmed !== true} loading={loading}>
             ログイン
           </Button>
         </Group>
