@@ -44,6 +44,7 @@ export function LoginForm() {
       if (!response.ok) {
         notifications.show({
           message: "認証情報を確認してください。",
+          color: "red"
         });
         throw new Error('Login failed');
       }
