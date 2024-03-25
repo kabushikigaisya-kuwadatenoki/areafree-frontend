@@ -7,7 +7,7 @@ const logo = "/logo.png";
 export function UnAuthHeader() {
   return (
     <Paper shadow="lg" px="md">
-      <Link href="/">
+      <Link href="/login">
         <Image src={logo} width={85} height={37} alt="logo" />
       </Link>
     </Paper>
