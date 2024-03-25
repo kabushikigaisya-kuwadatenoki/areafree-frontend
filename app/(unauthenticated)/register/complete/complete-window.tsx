@@ -32,6 +32,7 @@ export function CompleteWindow() {
         notifications.show({
           title: '認証エラー',
           message: '認証に失敗しました。リンクが有効か確認してください。',
+          color: "red"
         });
       }
     } catch (error) {
@@ -39,6 +40,7 @@ export function CompleteWindow() {
       notifications.show({
         title: 'エラー',
         message: '通信中にエラーが発生しました。',
+        color: "red"
       });
     }
   }

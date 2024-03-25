@@ -83,6 +83,7 @@ export function KebabReport({ guideId, userId, nickname }: { guideId: string; ni
         const errorResult = await response?.json();
         notifications.show({
           message: errorResult.error,
+          color: "red"
         });
       }
     } catch (error: any) {

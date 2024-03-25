@@ -63,6 +63,7 @@ export function GuideCard({ guides, userId }: Props) {
         const errorResult = await response?.json();
         notifications.show({
           message: errorResult.error,
+          color: "red"
         });
       }
     } catch (error: any) {
@@ -93,6 +94,7 @@ export function GuideCard({ guides, userId }: Props) {
         const errorResult = await response?.json();
         notifications.show({
           message: errorResult.error,
+          color: "red"
         });
       }
     } catch (error: any) {

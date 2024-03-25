@@ -61,7 +61,6 @@ export const ReportedDetails = ({ report }: ReportedDetailsProps) => {
         notifications.show({
           title: "アカウント凍結",
           message: "アカウントを凍結しました",
-          color: "red"
         })
       }
       return await response.json();
