@@ -28,7 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <MantineProvider theme={theme}>
-          <Notifications />
+          <Notifications position='top-center' />
           {children}
         </MantineProvider>
       </body>
